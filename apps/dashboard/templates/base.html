@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>{% block title %}Genesis{% endblock title %}</title>
+    <link rel="icon" href='/static/img/favicon.png' type="image/x-icon">
+
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'css/custom.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-progressbar-3.3.4.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/nucleo-icons.css' %}">
+    <link rel="stylesheet" href="{% static 'css/nucleo-svg.css' %}">
+    <link rel="stylesheet" href="{% static 'css/argon-dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/sweetalert.css' %}">
+    <link rel="stylesheet" href="{% static 'css/footable.core.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style_footable.css' %}">
+    <link rel="stylesheet" href="{% static 'css/select2.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/toast-master/css/jquery.toast.css' %}">
+
+    {% block styles %}
+
+    {% endblock styles %}
+</head>
+<body class="g-sidenav-show bg-gray-100 nav-md">
+    <div class="min-height-300 bg-primary position-absolute w-100"></div>
+    <aside class="sidenav bg-default navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-4 shadow" id="sidenav-main" data-color="dark" style="z-index: 0;">
+        <div class="sidenav-header">
+            <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
+            <a class="navbar-brand m-0 d-flex align-items-center">
+                <img src="{% static 'img/logo.png' %}" class="navbar-brand-img h-100" alt="main_logo">
+                <span class="ms-1 font-23 text-white">Genesis</span>
+            </a>
+        </div>
+        <hr class="horizontal dark mt-0">
+        <li class="nav-item mt-3" style="list-style: none;">
+            <h6 class="text-uppercase text-xs font-weight-bolder text-center opacity-8 text-white">Bienvenid@ {{ request.user.id_person.names }}</h6>
+        </li>
+        <hr class="horizontal dark mt-0">
+        <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+            <div class="menu_section">
+                <ul class="nav side-menu">
+                    <li><a><i class="fa fa-bar-chart-o"></i> Tableros <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu">
+                            <li><a href="#">Tablero Cobertura</a></li>
+                        </ul>
+                    </li>
+                    <li><a><i class="fa fa-desktop"></i> Fed <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu">
+                            <li><a><i class="fa fa-child"></i> Niños <span class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu">
+                                    <li><a href="{% url 'fed2425:mc03' %}">MC-03</a></li>
+                                    <li><a href="{% url 'fed2425:si0201' %}">SI-02.01</a></li>
+                                    <li><a href="{% url 'fed2425:si0202' %}">SI-02.02</a></li>
+                                    <li><a href="{% url 'fed2425:si0203' %}">SI-02.03</a></li>
+                                </ul>
+                            </li>
+                            <li><a><i class="fa fa-user"></i> Adolescentes <span class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu">
+                                    <li><a href="{% url 'fed2425:si0401' %}">SI-04</a></li>
+                                </ul>
+                            </li>
+                            <li><a><i class="fa fa-female"></i> Gestantes <span class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu">
+                                    <li><a href="{% url 'fed2425:si01' %}">SI-01</a></li>
+                                    <li><a href="{% url 'fed2425:vi0101' %}">VI-01.01</a></li>
+                                    <li><a href="{% url 'fed2425:vi0102' %}">VI-01.02</a></li>
+                                    <li><a href="{% url 'fed2425:vii0101' %}">VII-01</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <li><a><i class="fa fa-male"></i> Seguimiento <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu">
+                            <li><a href="#">Pacientes</a></li>
+                            <li><a href="#">Anemia Niños</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="sidenav-footer mx-3 ">
+            <div class="card card-plain shadow-none">
+                <a class="btn btn-primary btn-sm mb-0 w-100" href="{% url 'dashboard:logout' %}" type="button">Cerrar Sesión</a>
+            </div>
+        </div>
+    </aside>
+    <main class="main-content position-relative border-radius-lg">
+        <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl " id="navbarBlur" data-scroll="false">
+            <div class="container-fluid py-1 px-3">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                        <li class="breadcrumb-item text-sm"><a class="opacity-5 text-white" href="{% url 'dashboard:login' %}">Inicio</a></li>
+                        <li class="breadcrumb-item text-sm text-white active" aria-current="page">Dashboard</li>
+                    </ol>
+                </nav>
+                <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+                    <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+                        <div class="input-group mb-0">
+                            <span class="input-group-text text-body"><i class="fa fa-search" aria-hidden="true"></i></span>
+                            <input type="text" class="form-control" placeholder="Buscar...">
+                        </div>
+                    </div>
+                    <ul class="navbar-nav justify-content-end">
+                        <li class="nav-item dropdown pe-2 d-flex align-items-center">
+                            <a href="javascript:;" class="nav-link text-white p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-cog cursor-pointer"></i>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end px-2 py-2 me-sm-n4" aria-labelledby="dropdownMenuButton">
+                                <li>
+                                    <a class="dropdown-item border-radius-md" href="javascript:;">
+                                        <div class="d-flex py-1">
+                                            <div class="avatar avatar-sm bg-gradient-success me-3 my-auto">
+                                                <span class="fa fa-key"></span>
+                                            </div>
+                                            <div class="d-flex flex-column justify-content-center">
+                                                <h6 class="text-sm font-weight-normal mb-1" data-bs-toggle="modal" data-bs-target="#change_pw">Cambiar Contraseña</h6>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item border-radius-md" href="{% url 'dashboard:logout' %}">
+                                        <div class="d-flex py-1">
+                                            <div class="avatar avatar-sm bg-gradient-danger me-3 my-auto">
+                                                <span class="fa fa-sign-out"></span>
+                                            </div>
+                                            <div class="d-flex flex-column justify-content-center">
+                                                <h6 class="text-sm font-weight-normal mb-1">Cerrar Sesión</h6>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="container-fluid px-4 py-1">
+            {% block content %}
+            {% endblock content %}
+        </div>
+    </main>
+
+    <div class="modal fade" id="change_pw" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myModalLabel2">Cambiar Contraseña</h5>
+                    <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button> -->
+                    <button type="button" class="btn-close text-dark d-flex align-items-center font-weight-bolder" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="appForPassword">
+                        <form class="form-horizontal form-material" @submit.prevent="sendPass">
+                            {% csrf_token %}
+                            <input type="hidden" id="pid" name="pid" value="{{request.user.id}}" required>
+                            <div class="col-md-12 p-0 mb-2">
+                                <label for="">Nueva contraseña</label>
+                                <input type="password" id='password' name='password' class="form-control form-control-line">
+                            </div>
+                            <div class="col-md-12 p-0">
+                                <label for="">Repita nueva contraseña</label>
+                                <input type="password" id='password_r' name='password_r' class="form-control form-control-line">
+                            </div>
+                            <div class="col-md-12 p-0 mt-3">
+                                <button type='submit' class="btn btn-sm btn-success w-100"><span class="fa fa-save"></span> Guardar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static 'js/vue.js' %}"></script>
+    <script src="{% static 'js/axios.min.js' %}"></script>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/select2.full.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/custom.min.js' %}"></script>
+    <script src="{% static 'js/chart.min.js' %}"></script>
+    <script src="{% static 'js/vue.js' %}"></script>
+    <script src="{% static 'js/bootstrap-progressbar.min.js' %}"></script>
+    <script src="{% static 'js/jquery.easypiechart.min.js' %}"></script>
+    <script src="{% static 'js/sweetalert.min.js' %}"></script>
+    <script src="{% static 'js/gauge.min.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <!-- <script src="{% static 'js/perfect-scrollbar.min.js' %}"></script> -->
+    <!-- <script src="{% static 'js/smooth-scrollbar.min.js' %}"></script> -->
+    <script src="{% static 'js/footable.all.min.js' %}"></script>
+    <script src="{% static 'js/footable-init.js' %}"></script>
+    <script src="{% static 'plugins/toast-master/js/jquery.toast.js' %}"></script>
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+    <script src="{% static 'js/vue/profile.js' %}"></script>
+    <!-- <script src="{% static 'js/argon-dashboard.min.js' %}"></script> -->
+    <script>
+        Vue.directive('select2', {
+            inserted: function (elem, fieldName) {
+                $(elem).select2();
+            },
+            componentUpdated:function(el, binding) {
+                Vue.nextTick(function () {
+                    let options = binding.value || {};
+                    // set up select2
+                    $(el).select2(Object.assign({}, {
+                    // Default options
+                    }, options))
+                    .on("select2:select select2:unselect", (e) => {
+                        el.dispatchEvent(new Event('change', { target: e.target }));
+                    });
+                });
+            },
+        });
+    </script>
+    <script>
+        setTimeout(function() {
+            $('table').trigger('footable_redraw');
+            $('.chart').data('easyPieChart').options.barColor = '#5E72E4';
+        }, 100);
+
+        var win = navigator.platform.indexOf('Win') > -1;
+        if (win && document.querySelector('#sidenav-scrollbar')) {
+            var options = {
+                damping: '0.5'
+            }
+            Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+        }
+    </script>
+
+    {% block scripts %}
+
+    {% endblock scripts %}
+</body>
+</html>

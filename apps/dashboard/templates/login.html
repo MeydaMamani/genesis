@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+    <title>{% block title %}GENESIS{% endblock title %}</title>
+    <link rel="icon" href='/static/img/favicon.png' type="image/x-icon">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/stylelogin.css' %}">
+    {% block styles %}
+    {% endblock styles %}
+</head>
+<body class="login">
+    <div class="col-md-8 p-4">
+        <div class="card shadow">
+            <div class="row">
+                <div class="col-md-6 container-welcome">
+                    <div class="welcome-sign-in welcome">
+                        <br><br><br>
+                        <h3>¡Bienvenido a Genesis!</h3>
+                        <p>Ingrese sus datos personales para usar todas las funciones de la plataforma</p>
+                        <img src="{% static 'img/pru_3.png' %}" width="300" class="image_fondo" alt="logo login"/>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="container-form">
+                        <form class="sign-up" method="POST"><br>
+                            <img src="static/img/logo.png" width="130" alt="Home" />
+                            <h2>Iniciar Sesión</h2>
+                            {% csrf_token %}
+                            <div class="container-input">
+                                <span class="fa fa-user iconform font-16"></span>
+                                {{ form.username }}
+                            </div>
+                            <div class='col-xs-12 text-danger'>
+                                {{ form.username.errors }}
+                            </div>
+                            <div class="container-input">
+                                <span class="fa fa-lock iconform font-16"></span>
+                                {{ form.password }}
+                            </div>
+                            <div class='col-xs-12 text-danger'>
+                                {{ form.password.errors }}
+                            </div>
+                            <button class="button" type="submit">INGRESAR</button>
+                            <div class="social-networks">
+                                <a href="https://www.facebook.com/DiresaPasco063" class="fa fa-facebook"></a>
+                                <a href="https://diresapasco.gob.pe/" class="fa fa-globe"></a>
+                                <a href="#" class="fa fa-instagram"></a>
+                            </div><br>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div><br>
+</body>
+</html>

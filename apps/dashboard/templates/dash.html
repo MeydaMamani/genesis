@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load static  %}
+
+{% block title %}
+    Dashboard
+{% endblock title %}
+
+{% block styles %}
+
+{% endblock styles %}
+
+{% block content %}
+
+<div class="card mb-4">
+    <div class="card-header pb-0 p-3">
+        <h6 class="mb-1">Indicadores</h6>
+    </div>
+    <div class="card-body p-3">
+        <div class="row">
+            <div class="col-xl-3 col-md-6 mb-xl-0 mb-4">
+                <div class="card card-blog card-plain">
+                    <div class="position-relative">
+                        <a class="d-block shadow-xl border-radius-xl">
+                            <img src="{% static 'img/kids.png' %}" style="height: 197px; width: 100%;" alt="img-blur-shadow" class="img-fluid shadow border-radius-xl">
+                        </a>
+                    </div>
+                    <div class="card-body px-1 pb-0">
+                        <a href="javascript:;" class="text-center"><h5>Fed- Ind. Niños</h5></a>
+                        <ul class="list-group">
+                            <li class="list-group-item font-13"><a href="{% url 'fed2425:mc03' %}">MC-03: Paquete Recién Nacido</a></li>
+                            <li class="list-group-item font-13"><a href="{% url 'fed2425:si0201' %}">SI-02.01: Niños prematuros y 4M</a></li>
+                            <li class="list-group-item font-13"><a href="{% url 'fed2425:si0202' %}">SI-02.02: Niños 6m con Anemia</a></li>
+                            <li class="list-group-item font-13"><a href="{% url 'fed2425:si0203' %}">SI-02.03: Niños 6m sin Anemia</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-xl-0 mb-4">
+                <div class="card card-blog card-plain">
+                    <div class="position-relative">
+                        <a class="d-block shadow-xl border-radius-xl">
+                            <img src="{% static 'img/adolescente1.png' %}" alt="img adoles." class="p-2 img-fluid shadow border-radius-xl" style="background: #EDE4B2; width: 100%;">
+                        </a>
+                    </div>
+                    <div class="card-body px-1 pb-0">
+                        <a href="javascript:;" class="text-center"><h5>Fed- Ind. Adolescentes</h5></a>
+                        <ul class="list-group">
+                            <li class="list-group-item font-13"><a href="{% url 'fed2425:si0401' %}">SI-04: Adolescentes con dosaje de hemoglobina</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-3 col-md-6 mb-xl-0 mb-4">
+                <div class="card card-blog card-plain">
+                    <div class="position-relative">
+                        <a class="d-block shadow-xl border-radius-xl">
+                            <img src="{% static 'img/images00.jpg' %}" alt="img-blur-shadow" class="img-fluid shadow border-radius-xl" style="width: 100%;">
+                        </a>
+                    </div>
+                    <div class="card-body px-1 pb-0">
+                        <a href="javascript:;" class="text-center"><h5>Fed- Ind. Gestantes</h5></a>
+                        <ul class="list-group">
+                            <li class="list-group-item list-group-item-action font-13"><a href="{% url 'fed2425:si01' %}">SI-01: Gestantes con Dx Anemia</a></li>
+                            <li class="list-group-item list-group-item-action font-13"><a href="{% url 'fed2425:vi0101' %}">VI-01.01: Gestantes con aplicación ficha dx violencia</a></li>
+                            <li class="list-group-item list-group-item-action font-13"><a href="{% url 'fed2425:vi0102' %}">VI-01.02: Gestantes con tmz positivo violencia</a></li>
+                            <li class="list-group-item list-group-item-action font-13"><a href="{% url 'fed2425:vii0101' %}">VII-01: Gestantes que reciben paquete min. de intervenciones</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block scripts %}
+
+<!-- <script src="{% static 'js/vue/si-02_01.js' %}"></script>
+<script src="{% static 'js/js/si-02_01.js' %}"></script> -->
+
+{% endblock scripts %}
