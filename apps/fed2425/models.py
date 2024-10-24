@@ -154,6 +154,7 @@ class si_0203(models.Model):
     suple5 = models.DateField(blank=True, null=True)
     suple6 = models.DateField(blank=True, null=True)
     ta = models.DateField(blank=True, null=True)
+    dsje12m = models.DateField(blank=True, null=True)
     programa = models.CharField(max_length=150, blank=True, null=True)
     den = models.IntegerField(blank=True, null=True)
     num = models.IntegerField(blank=True, null=True)

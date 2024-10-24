@@ -1431,7 +1431,7 @@ class PrintSI0202(View):
         ws['V7'].alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
         ws['V7'].fill = PatternFill(start_color='FFFF00', end_color='FFFF00', fill_type='solid')
 
-        ws['W7'] = 'Documento'
+        ws['W7'] = 'Programa'
         ws['W7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
         ws['W7'].font = Font(name='Aptos Narrow', size=10, bold=True)
         ws['W7'].alignment = Alignment(horizontal="center", vertical="center")
@@ -1644,9 +1644,9 @@ class PrintSI0203(View):
                 for cell in row:
                     cell.border = Border(top=thin, left=thin, right=thin, bottom=thin)
 
-        set_border(self, ws, "A2:T2", "medium", "2F75B5")
-        set_border(self, ws, "A3:T3", "medium", "366092")
-        set_border(self, ws, "A5:T5", "medium", "D9D9D9")
+        set_border(self, ws, "A2:U2", "medium", "2F75B5")
+        set_border(self, ws, "A3:U3", "medium", "366092")
+        set_border(self, ws, "A5:U5", "medium", "D9D9D9")
 
         img = Image('static/img/logoPrint.png')
         ws.merge_cells('A2:A3')
@@ -1671,19 +1671,20 @@ class PrintSI0203(View):
         ws.column_dimensions['P'].width = 12
         ws.column_dimensions['Q'].width = 12
         ws.column_dimensions['R'].width = 12
-        ws.column_dimensions['S'].width = 8
-        ws.column_dimensions['T'].width = 20
+        ws.column_dimensions['S'].width = 12
+        ws.column_dimensions['T'].width = 8
+        ws.column_dimensions['U'].width = 20
 
-        ws.merge_cells('B2:T2')
+        ws.merge_cells('B2:U2')
         ws['B2'].font = Font(name='Aptos Narrow', size=12, bold=True, color='2F75B5')
         ws['B2'].alignment = Alignment(horizontal="left", vertical="center", wrap_text=True)
         ws['B2'] = 'DIRESA PASCO - DEIT: SI-02.03: Niñas y niños de seis (06) meses de edad del departamento, sin diagnóstico anemia, que reciben tres (03) dosajes de hemoglobina y culminan la suplementación preventiva con hierro a los 12 meses de edad - ' + nameMonth.upper() + ' ' + request.GET['anio']
 
-        ws.merge_cells('B3:T3')
+        ws.merge_cells('B3:U3')
         ws['B3'].font = Font(name='Aptos Narrow', size=9, bold=True, color='305496')
         ws['B3'] = 'CODIFICACION: Dosaje Hemoglobina: 85018, 85018.01 - Suplementación: 99199.17, 99199.11'
 
-        ws.merge_cells('A5:T5')
+        ws.merge_cells('A5:U5')
         ws['A5'].font = Font(name='Aptos Narrow', size=9, bold=True, color='757171')
         ws['A5'] = 'Fuente: BD_HISMINSA con Fecha: ' + date.today().strftime('%Y-%m-%d') + ' a las 08:30 horas'
 
@@ -1795,17 +1796,23 @@ class PrintSI0203(View):
         ws['R7'].alignment = Alignment(horizontal="center", vertical="center")
         ws['R7'].fill = PatternFill(start_color='CBF5D5', end_color='CBF5D5', fill_type='solid')
 
-        ws['S7'] = 'Cumple'
+        ws['S7'] = 'Dsje 1A'
         ws['S7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
         ws['S7'].font = Font(name='Aptos Narrow', size=10, bold=True)
-        ws['S7'].alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
-        ws['S7'].fill = PatternFill(start_color='FFFF00', end_color='FFFF00', fill_type='solid')
+        ws['S7'].alignment = Alignment(horizontal="center", vertical="center")
+        ws['S7'].fill = PatternFill(start_color='dce1f5', end_color='dce1f5', fill_type='solid')
 
-        ws['T7'] = 'Programa'
+        ws['T7'] = 'Cumple'
         ws['T7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
         ws['T7'].font = Font(name='Aptos Narrow', size=10, bold=True)
-        ws['T7'].alignment = Alignment(horizontal="center", vertical="center")
-        ws['T7'].fill = PatternFill(start_color='CBD5F5', end_color='CBD5F5', fill_type='solid')
+        ws['T7'].alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+        ws['T7'].fill = PatternFill(start_color='FFFF00', end_color='FFFF00', fill_type='solid')
+
+        ws['U7'] = 'Programa'
+        ws['U7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+        ws['U7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+        ws['U7'].alignment = Alignment(horizontal="center", vertical="center")
+        ws['U7'].fill = PatternFill(start_color='CBD5F5', end_color='CBD5F5', fill_type='solid')
 
         if request.GET['sector'] == 'TODOS':
             if request.GET['prov'] == 'TODOS':
@@ -1863,17 +1870,19 @@ class PrintSI0203(View):
                 ws.cell(row=cont, column=17).alignment = Alignment(horizontal="center")
                 ws.cell(row=cont, column=18).value = pqtrn['fields']['ta']
                 ws.cell(row=cont, column=18).alignment = Alignment(horizontal="center")
+                ws.cell(row=cont, column=19).value = pqtrn['fields']['dsje12m']
                 ws.cell(row=cont, column=19).alignment = Alignment(horizontal="center")
+                ws.cell(row=cont, column=20).alignment = Alignment(horizontal="center")
                 if pqtrn['fields']['num'] == 1:
                     cumplen = '✔'
-                    ws.cell(row=cont, column=19).font = Font(name='Calibri', size=10, color='00AC4E')
+                    ws.cell(row=cont, column=20).font = Font(name='Calibri', size=10, color='00AC4E')
                 else:
                     cumplen = '✘'
-                    ws.cell(row=cont, column=19).font = Font(name='Calibri', size=10, color='C00000')
+                    ws.cell(row=cont, column=20).font = Font(name='Calibri', size=10, color='C00000')
 
-                ws.cell(row=cont, column=19).value = cumplen
-                ws.cell(row=cont, column=20).value = pqtrn['fields']['programa']
-                ws.cell(row=cont, column=20).alignment = Alignment(wrap_text=True)
+                ws.cell(row=cont, column=20).value = cumplen
+                ws.cell(row=cont, column=21).value = pqtrn['fields']['programa']
+                ws.cell(row=cont, column=21).alignment = Alignment(wrap_text=True)
 
                 cont = cont+1
                 num = num+1
