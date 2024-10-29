@@ -10,7 +10,7 @@ from django.db.models.functions import Cast, Round
 import json
 from datetime import date, datetime
 
-from .models import dit001_ac_n, mat002_vg_n, mat002_vg_cr, mat002_vg_c, mat002_dc_n, dit001_fng_n, mat002_vp_n, mat002_vp_cr, tbcvih016_tbc_n, tbcvih016_tbc_cr, tbcvih016_tbc_c, tbcvih016_vih_n, tbcvih016_vih_cr, tbcvih016_vih_c
+from .models import dit001_ac_n, mat002_vg_n, mat002_vg_cr, mat002_vg_c, mat002_dc_n, dit001_fng_n, mat002_vp_n, mat002_vp_cr, tbcvih016_tbc_n, tbcvih016_tbc_cr, tbcvih016_tbc_c, tbcvih016_vih_n, tbcvih016_vih_cr, tbcvih016_vih_c, met017_met_n, met017_met_cr
 from apps.main.models import Sector, Provincia, Distrito, Establecimiento
 
 # library excel
@@ -1690,5 +1690,382 @@ class PrintPromsa(View):
             ws.title = 'NOMINAL'
             sheet2.title = 'CRUCE'
             sheet3.title = 'CONSOLIDADO'
+            wb.save(response)
+            return response
+
+        elif request.GET['tipo'] == 'met017':
+            sheet2 = wb.create_sheet('CRUCE')
+
+            if request.GET['prov'] == 'TODOS':
+                dataNom = met017_met_n.objects.filter(anio=request.GET['anio']).order_by('provincia')
+                dataCruce = met017_met_cr.objects.filter(anio=request.GET['anio']).order_by('provincia')
+            elif request.GET['prov'] != 'TODOS' and request.GET['dist'] == 'TODOS':
+                dataNom = met017_met_n.objects.filter(anio=request.GET['anio'], cod_prov=request.GET['prov']).order_by('provincia')
+                dataCruce = met017_met_cr.objects.filter(anio=request.GET['anio'], cod_prov=request.GET['prov']).order_by('provincia')
+            elif request.GET['prov'] != 'TODOS' and request.GET['dist'] != 'TODOS' and request.GET['eess'] == 'TODOS':
+                dataNom = met017_met_n.objects.filter(anio=request.GET['anio'], cod_dist=request.GET['dist']).order_by('provincia')
+                dataCruce = met017_met_cr.objects.filter(anio=request.GET['anio'], cod_dist=request.GET['dist']).order_by('provincia')
+            elif request.GET['prov'] != 'TODOS' and request.GET['dist'] != 'TODOS' and request.GET['eess'] != 'TODOS':
+                dataNom = met017_met_n.objects.filter(anio=request.GET['anio'], cod_dist=request.GET['dist']).order_by('provincia')
+                dataCruce = met017_met_cr.objects.filter(anio=request.GET['anio'], cod_dist=request.GET['dist']).order_by('provincia')
+
+            dataNom = json.loads(serializers.serialize('json', dataNom, indent=2, use_natural_foreign_keys=True))
+            dataCruce = json.loads(serializers.serialize('json', dataCruce, indent=2, use_natural_foreign_keys=True))
+
+            set_border(self, ws, "A2:K2", "medium", "2F75B5")
+            set_border(self, ws, "A3:K3", "medium", "366092")
+            set_border(self, ws, "A5:K5", "medium", "D9D9D9")
+
+            ws.row_dimensions[2].height = 23
+            ws.column_dimensions['A'].width = 7
+            ws.column_dimensions['B'].width = 24
+            ws.column_dimensions['C'].width = 24
+            ws.column_dimensions['D'].width = 35
+            ws.column_dimensions['E'].width = 10
+            ws.column_dimensions['F'].width = 5
+            ws.column_dimensions['G'].width = 12
+            ws.column_dimensions['H'].width = 12
+            ws.column_dimensions['I'].width = 20
+            ws.column_dimensions['J'].width = 50
+            ws.column_dimensions['K'].width = 5
+
+            ws.merge_cells('B2:K2')
+            ws['B2'].font = Font(name='Aptos Narrow', size=12, bold=True, color='2F75B5')
+            ws['B2'].alignment = Alignment(horizontal="left", vertical="center", wrap_text=True)
+            ws['B2'] = 'DIRESA PASCO - DEIT: 0017 METAXÈNICAS Y ZOONOTICAS Familias que reciben sesiones demostrativas desarrollan prácticas saludables para la prevención de las enfermedades metaxénicas. - ' + request.GET['anio']
+
+            ws.merge_cells('B3:K3')
+            ws['B3'].font = Font(name='Aptos Narrow', size=9, bold=True, color='305496')
+            ws['B3'] = 'CODIFICACION: '
+
+            ws.merge_cells('A5:K5')
+            ws['A5'].font = Font(name='Aptos Narrow', size=9, bold=True, color='757171')
+            ws['A5'] = 'Fuente: BD_HISMINSA con Fecha: ' + date.today().strftime('%Y-%m-%d') + ' a las 08:30 horas'
+
+            ws['A7'] = '#'
+            ws['A7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            ws['A7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            ws['A7'].alignment = Alignment(horizontal="center", vertical="center")
+            ws['A7'].fill = PatternFill(start_color='CBD5F5', end_color='CBD5F5', fill_type='solid')
+
+            ws['B7'] = 'Provincia'
+            ws['B7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            ws['B7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            ws['B7'].alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+            ws['B7'].fill = PatternFill(start_color='CBD5F5', end_color='CBD5F5', fill_type='solid')
+
+            ws['C7'] = 'Distrito'
+            ws['C7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            ws['C7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            ws['C7'].alignment = Alignment(horizontal="center", vertical="center")
+            ws['C7'].fill = PatternFill(start_color='CBD5F5', end_color='CBD5F5', fill_type='solid')
+
+            ws['D7'] = 'Establecimiento'
+            ws['D7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            ws['D7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            ws['D7'].alignment = Alignment(horizontal="center", vertical="center")
+            ws['D7'].fill = PatternFill(start_color='CBD5F5', end_color='CBD5F5', fill_type='solid')
+
+            ws['E7'] = 'Documento'
+            ws['E7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            ws['E7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            ws['E7'].alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+            ws['E7'].fill = PatternFill(start_color='CBD5F5', end_color='CBD5F5', fill_type='solid')
+
+            ws['F7'] = 'Mes'
+            ws['F7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            ws['F7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            ws['F7'].alignment = Alignment(horizontal="center", vertical="center")
+            ws['F7'].fill = PatternFill(start_color='CBD5F5', end_color='CBD5F5', fill_type='solid')
+
+            ws['G7'] = 'Fecha Aten.'
+            ws['G7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            ws['G7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            ws['G7'].alignment = Alignment(horizontal="center", vertical="center")
+            ws['G7'].fill = PatternFill(start_color='CBD5F5', end_color='CBD5F5', fill_type='solid')
+
+            ws['H7'] = 'Motivo'
+            ws['H7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            ws['H7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            ws['H7'].alignment = Alignment(horizontal="center", vertical="center")
+            ws['H7'].fill = PatternFill(start_color='CBD5F5', end_color='CBD5F5', fill_type='solid')
+
+            ws['I7'] = 'Sesión'
+            ws['I7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            ws['I7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            ws['I7'].alignment = Alignment(horizontal="center", vertical="center")
+            ws['I7'].fill = PatternFill(start_color='CBD5F5', end_color='CBD5F5', fill_type='solid')
+
+            ws['J7'] = 'Sub Producto'
+            ws['J7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            ws['J7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            ws['J7'].alignment = Alignment(horizontal="center", vertical="center")
+            ws['J7'].fill = PatternFill(start_color='abc7fb', end_color='abc7fb', fill_type='solid')
+
+            ws['K7'] = 'Reg'
+            ws['K7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            ws['K7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            ws['K7'].alignment = Alignment(horizontal="center", vertical="center")
+            ws['K7'].fill = PatternFill(start_color='abc7fb', end_color='abc7fb', fill_type='solid')
+
+            cont = 8
+            cant = len(dataNom)
+            num=1
+            if cant > 0:
+                for metax in dataNom:
+                    ws.cell(row=cont, column=1).value = num
+                    ws.cell(row=cont, column=1).alignment = Alignment(horizontal="center")
+                    ws.cell(row=cont, column=2).value = metax['fields']['provincia']
+                    ws.cell(row=cont, column=3).value = metax['fields']['distrito']
+                    ws.cell(row=cont, column=4).value = metax['fields']['eess']
+                    ws.cell(row=cont, column=4).alignment = Alignment(wrap_text=True)
+                    ws.cell(row=cont, column=5).value = metax['fields']['documento']
+                    ws.cell(row=cont, column=6).value = metax['fields']['mes']
+                    ws.cell(row=cont, column=7).value = metax['fields']['fec_atencion']
+                    ws.cell(row=cont, column=8).value = metax['fields']['motivo']
+                    ws.cell(row=cont, column=9).value = metax['fields']['sesion']
+                    ws.cell(row=cont, column=10).value = metax['fields']['subproduct']
+                    ws.cell(row=cont, column=10).alignment = Alignment(wrap_text=True)
+                    ws.cell(row=cont, column=11).value = metax['fields']['reg']
+
+                    cont = cont+1
+                    num = num+1
+
+            sheet2.row_dimensions[2].height = 23
+            sheet2.column_dimensions['A'].width = 7
+            sheet2.column_dimensions['B'].width = 24
+            sheet2.column_dimensions['C'].width = 24
+            sheet2.column_dimensions['D'].width = 10
+            sheet2.column_dimensions['E'].width = 24
+            sheet2.column_dimensions['F'].width = 5
+            sheet2.column_dimensions['G'].width = 12
+            sheet2.column_dimensions['H'].width = 12
+            sheet2.column_dimensions['I'].width = 12
+            sheet2.column_dimensions['J'].width = 12
+            sheet2.column_dimensions['K'].width = 12
+            sheet2.column_dimensions['L'].width = 12
+            sheet2.column_dimensions['M'].width = 12
+            sheet2.column_dimensions['N'].width = 12
+            sheet2.column_dimensions['O'].width = 12
+            sheet2.column_dimensions['P'].width = 12
+            sheet2.column_dimensions['Q'].width = 12
+            sheet2.column_dimensions['R'].width = 12
+            sheet2.column_dimensions['S'].width = 12
+            sheet2.column_dimensions['T'].width = 12
+            sheet2.column_dimensions['U'].width = 12
+            sheet2.column_dimensions['V'].width = 12
+            sheet2.column_dimensions['W'].width = 12
+            sheet2.column_dimensions['X'].width = 12
+            sheet2.column_dimensions['Y'].width = 12
+            sheet2.column_dimensions['Z'].width = 12
+
+            set_border(self, sheet2, "A2:Z2", "medium", "2F75B5")
+
+            sheet2.merge_cells('A2:Z2')
+            sheet2['A2'].font = Font(name='Aptos Narrow', size=12, bold=True, color='2F75B5')
+            sheet2['A2'].alignment = Alignment(horizontal="left", vertical="center", wrap_text=True)
+            sheet2['A2'] = 'DIRESA PASCO - DEIT: 0017 METAXÈNICAS Y ZOONOTICAS Familias que reciben sesiones demostrativas desarrollan prácticas saludables para la prevención de las enfermedades metaxénicas. (CRUCE) - ' + request.GET['anio']
+
+            sheet2['A4'] = '#'
+            sheet2['A4'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            sheet2['A4'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            sheet2['A4'].alignment = Alignment(horizontal="center", vertical="center")
+            sheet2['A4'].fill = PatternFill(start_color='CBD5F5', end_color='CBD5F5', fill_type='solid')
+
+            sheet2['B4'] = 'Provincia'
+            sheet2['B4'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            sheet2['B4'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            sheet2['B4'].alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+            sheet2['B4'].fill = PatternFill(start_color='CBD5F5', end_color='CBD5F5', fill_type='solid')
+
+            sheet2['C4'] = 'Distrito'
+            sheet2['C4'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            sheet2['C4'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            sheet2['C4'].alignment = Alignment(horizontal="center", vertical="center")
+            sheet2['C4'].fill = PatternFill(start_color='CBD5F5', end_color='CBD5F5', fill_type='solid')
+
+            sheet2['D4'] = 'Documento'
+            sheet2['D4'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            sheet2['D4'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            sheet2['D4'].alignment = Alignment(horizontal="center", vertical="center")
+            sheet2['D4'].fill = PatternFill(start_color='CBD5F5', end_color='CBD5F5', fill_type='solid')
+
+            sheet2['E4'] = 'Sub Producto'
+            sheet2['E4'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            sheet2['E4'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            sheet2['E4'].alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+            sheet2['E4'].fill = PatternFill(start_color='CBD5F5', end_color='CBD5F5', fill_type='solid')
+
+            sheet2['F4'] = 'Reg'
+            sheet2['F4'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            sheet2['F4'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            sheet2['F4'].alignment = Alignment(horizontal="center", vertical="center")
+            sheet2['F4'].fill = PatternFill(start_color='CBD5F5', end_color='CBD5F5', fill_type='solid')
+
+            sheet2['G4'] = 'Dengue1'
+            sheet2['G4'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            sheet2['G4'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            sheet2['G4'].alignment = Alignment(horizontal="center", vertical="center")
+            sheet2['G4'].fill = PatternFill(start_color='CBD5F5', end_color='CBD5F5', fill_type='solid')
+
+            sheet2['H4'] = 'Dengue2'
+            sheet2['H4'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            sheet2['H4'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            sheet2['H4'].alignment = Alignment(horizontal="center", vertical="center")
+            sheet2['H4'].fill = PatternFill(start_color='abc7fb', end_color='abc7fb', fill_type='solid')
+
+            sheet2['I4'] = 'Chikin1'
+            sheet2['I4'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            sheet2['I4'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            sheet2['I4'].alignment = Alignment(horizontal="center", vertical="center")
+            sheet2['I4'].fill = PatternFill(start_color='abc7fb', end_color='abc7fb', fill_type='solid')
+
+            sheet2['J4'] = 'Chikin2'
+            sheet2['J4'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            sheet2['J4'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            sheet2['J4'].alignment = Alignment(horizontal="center", vertical="center")
+            sheet2['J4'].fill = PatternFill(start_color='abc7fb', end_color='abc7fb', fill_type='solid')
+
+            sheet2['K4'] = 'Zoorabia1'
+            sheet2['K4'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            sheet2['K4'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            sheet2['K4'].alignment = Alignment(horizontal="center", vertical="center")
+            sheet2['K4'].fill = PatternFill(start_color='abc7fb', end_color='abc7fb', fill_type='solid')
+
+            sheet2['L4'] = 'Zoorabia2'
+            sheet2['L4'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            sheet2['L4'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            sheet2['L4'].alignment = Alignment(horizontal="center", vertical="center")
+            sheet2['L4'].fill = PatternFill(start_color='abc7fb', end_color='abc7fb', fill_type='solid')
+
+            sheet2['M4'] = 'Equino1'
+            sheet2['M4'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            sheet2['M4'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            sheet2['M4'].alignment = Alignment(horizontal="center", vertical="center")
+            sheet2['M4'].fill = PatternFill(start_color='abc7fb', end_color='abc7fb', fill_type='solid')
+
+            sheet2['N4'] = 'Equino2'
+            sheet2['N4'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            sheet2['N4'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            sheet2['N4'].alignment = Alignment(horizontal="center", vertical="center")
+            sheet2['N4'].fill = PatternFill(start_color='abc7fb', end_color='abc7fb', fill_type='solid')
+
+            sheet2['O4'] = 'F Amar1'
+            sheet2['O4'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            sheet2['O4'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            sheet2['O4'].alignment = Alignment(horizontal="center", vertical="center")
+            sheet2['O4'].fill = PatternFill(start_color='abc7fb', end_color='abc7fb', fill_type='solid')
+
+            sheet2['P4'] = 'F Amar2'
+            sheet2['P4'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            sheet2['P4'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            sheet2['P4'].alignment = Alignment(horizontal="center", vertical="center")
+            sheet2['P4'].fill = PatternFill(start_color='abc7fb', end_color='abc7fb', fill_type='solid')
+
+            sheet2['Q4'] = 'Leishma1'
+            sheet2['Q4'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            sheet2['Q4'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            sheet2['Q4'].alignment = Alignment(horizontal="center", vertical="center")
+            sheet2['Q4'].fill = PatternFill(start_color='abc7fb', end_color='abc7fb', fill_type='solid')
+
+            sheet2['R4'] = 'Leishma2'
+            sheet2['R4'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            sheet2['R4'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            sheet2['R4'].alignment = Alignment(horizontal="center", vertical="center")
+            sheet2['R4'].fill = PatternFill(start_color='abc7fb', end_color='abc7fb', fill_type='solid')
+
+            sheet2['S4'] = 'Malaria1'
+            sheet2['S4'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            sheet2['S4'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            sheet2['S4'].alignment = Alignment(horizontal="center", vertical="center")
+            sheet2['S4'].fill = PatternFill(start_color='abc7fb', end_color='abc7fb', fill_type='solid')
+
+            sheet2['T4'] = 'Malaria2'
+            sheet2['T4'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            sheet2['T4'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            sheet2['T4'].alignment = Alignment(horizontal="center", vertical="center")
+            sheet2['T4'].fill = PatternFill(start_color='abc7fb', end_color='abc7fb', fill_type='solid')
+
+            sheet2['U4'] = 'Peste1'
+            sheet2['U4'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            sheet2['U4'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            sheet2['U4'].alignment = Alignment(horizontal="center", vertical="center")
+            sheet2['U4'].fill = PatternFill(start_color='abc7fb', end_color='abc7fb', fill_type='solid')
+
+            sheet2['V4'] = 'Peste2'
+            sheet2['V4'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            sheet2['V4'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            sheet2['V4'].alignment = Alignment(horizontal="center", vertical="center")
+            sheet2['V4'].fill = PatternFill(start_color='abc7fb', end_color='abc7fb', fill_type='solid')
+
+            sheet2['W4'] = 'Tifus1'
+            sheet2['W4'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            sheet2['W4'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            sheet2['W4'].alignment = Alignment(horizontal="center", vertical="center")
+            sheet2['W4'].fill = PatternFill(start_color='abc7fb', end_color='abc7fb', fill_type='solid')
+
+            sheet2['X4'] = 'Tifus2'
+            sheet2['X4'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            sheet2['X4'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            sheet2['X4'].alignment = Alignment(horizontal="center", vertical="center")
+            sheet2['X4'].fill = PatternFill(start_color='abc7fb', end_color='abc7fb', fill_type='solid')
+
+            sheet2['Y4'] = 'Zika1'
+            sheet2['Y4'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            sheet2['Y4'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            sheet2['Y4'].alignment = Alignment(horizontal="center", vertical="center")
+            sheet2['Y4'].fill = PatternFill(start_color='abc7fb', end_color='abc7fb', fill_type='solid')
+
+            sheet2['Z4'] = 'Zika2'
+            sheet2['Z4'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            sheet2['Z4'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            sheet2['Z4'].alignment = Alignment(horizontal="center", vertical="center")
+            sheet2['Z4'].fill = PatternFill(start_color='abc7fb', end_color='abc7fb', fill_type='solid')
+
+            cont = 5
+            cant = len(dataCruce)
+            num=1
+            if cant > 0:
+                for vih_cr in dataCruce:
+                    sheet2.cell(row=cont, column=1).value = num
+                    sheet2.cell(row=cont, column=1).alignment = Alignment(horizontal="center")
+                    sheet2.cell(row=cont, column=2).value = vih_cr['fields']['provincia']
+                    sheet2.cell(row=cont, column=3).value = vih_cr['fields']['distrito']
+                    sheet2.cell(row=cont, column=4).value = vih_cr['fields']['documento']
+                    sheet2.cell(row=cont, column=5).value = vih_cr['fields']['subproduct']
+                    sheet2.cell(row=cont, column=5).alignment = Alignment(wrap_text=True)
+                    sheet2.cell(row=cont, column=6).value = vih_cr['fields']['reg']
+                    sheet2.cell(row=cont, column=7).value = vih_cr['fields']['dengue1']
+                    sheet2.cell(row=cont, column=8).value = vih_cr['fields']['dengue2']
+                    sheet2.cell(row=cont, column=9).value = vih_cr['fields']['chikin1']
+                    sheet2.cell(row=cont, column=10).value = vih_cr['fields']['chikin2']
+                    sheet2.cell(row=cont, column=11).value = vih_cr['fields']['zoorabia1']
+                    sheet2.cell(row=cont, column=12).value = vih_cr['fields']['zoorabia2']
+                    sheet2.cell(row=cont, column=13).value = vih_cr['fields']['equino1']
+                    sheet2.cell(row=cont, column=14).value = vih_cr['fields']['equino2']
+                    sheet2.cell(row=cont, column=15).value = vih_cr['fields']['f_amar1']
+                    sheet2.cell(row=cont, column=16).value = vih_cr['fields']['f_amar2']
+                    sheet2.cell(row=cont, column=17).value = vih_cr['fields']['leishma1']
+                    sheet2.cell(row=cont, column=18).value = vih_cr['fields']['chikin1']
+                    sheet2.cell(row=cont, column=19).value = vih_cr['fields']['leishma2']
+                    sheet2.cell(row=cont, column=20).value = vih_cr['fields']['malaria1']
+                    sheet2.cell(row=cont, column=21).value = vih_cr['fields']['malaria2']
+                    sheet2.cell(row=cont, column=22).value = vih_cr['fields']['peste1']
+                    sheet2.cell(row=cont, column=23).value = vih_cr['fields']['peste2']
+                    sheet2.cell(row=cont, column=24).value = vih_cr['fields']['tifus1']
+                    sheet2.cell(row=cont, column=25).value = vih_cr['fields']['tifus2']
+                    sheet2.cell(row=cont, column=26).value = vih_cr['fields']['zika1']
+                    sheet2.cell(row=cont, column=27).value = vih_cr['fields']['zika2']
+
+                    cont = cont+1
+                    num = num+1
+
+
+            nombre_archivo = "DEIT_PASCO METAXÈNICAS Y ZOONOTICAS FAMILIAS QUE RECIB. SESIONES DEMOST.xlsx"
+            response = HttpResponse(content_type="application/ms-excel")
+            contenido = "attachment; filename={0}".format(nombre_archivo)
+            response["Content-Disposition"] = contenido
+            ws.title = 'NOMINAL'
+            sheet2.title = 'CRUCE'
             wb.save(response)
             return response
