@@ -321,3 +321,24 @@ class met017_met_cr(models.Model):
     den = models.IntegerField(blank=True, null=True)
     num = models.IntegerField(blank=True, null=True)
 
+
+class cc(models.Model):
+    anio = models.IntegerField(blank=True, null=True)
+    mes = models.IntegerField(blank=True, null=True)
+    cod_dep = models.CharField(max_length=10, blank=True, null=True)
+    departamento = models.CharField(max_length=70, blank=True, null=True)
+    cod_prov = models.CharField(max_length=10, blank=True, null=True)
+    provincia = models.CharField(max_length=100, blank=True, null=True)
+    cod_dist = models.CharField(max_length=10, blank=True, null=True)
+    distrito = models.CharField(max_length=150, blank=True, null=True)
+    cod_eess = models.CharField(max_length=10, blank=True, null=True)
+    eess = models.CharField(max_length=300, blank=True, null=True)
+    documento = models.CharField(max_length=15, blank=True, null=True)
+    fec_nac = models.DateField(blank=True, null=True)
+    fec_atencion = models.DateField(blank=True, null=True)
+    reg_manual = models.CharField(max_length=150, blank=True, null=True)
+    subproduct = models.CharField(max_length=500, blank=True, null=True)
+    observacion = models.CharField(max_length=500, blank=True, null=True)
+    den = models.IntegerField(blank=True, null=True)
+    num = models.IntegerField(blank=True, null=True)
+

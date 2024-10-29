@@ -10,7 +10,7 @@ from django.db.models.functions import Cast, Round
 import json
 from datetime import date, datetime
 
-from .models import dit001_ac_n, mat002_vg_n, mat002_vg_cr, mat002_vg_c, mat002_dc_n, dit001_fng_n, mat002_vp_n, mat002_vp_cr, tbcvih016_tbc_n, tbcvih016_tbc_cr, tbcvih016_tbc_c, tbcvih016_vih_n, tbcvih016_vih_cr, tbcvih016_vih_c, met017_met_n, met017_met_cr
+from .models import dit001_ac_n, mat002_vg_n, mat002_vg_cr, mat002_vg_c, mat002_dc_n, dit001_fng_n, mat002_vp_n, mat002_vp_cr, tbcvih016_tbc_n, tbcvih016_tbc_cr, tbcvih016_tbc_c, tbcvih016_vih_n, tbcvih016_vih_cr, tbcvih016_vih_c, met017_met_n, met017_met_cr, cc
 from apps.main.models import Sector, Provincia, Distrito, Establecimiento
 
 # library excel
@@ -2067,5 +2067,149 @@ class PrintPromsa(View):
             response["Content-Disposition"] = contenido
             ws.title = 'NOMINAL'
             sheet2.title = 'CRUCE'
+            wb.save(response)
+            return response
+
+        elif request.GET['tipo'] == 'cc':
+            set_border(self, ws, "A2:k2", "medium", "2F75B5")
+            set_border(self, ws, "A3:k3", "medium", "366092")
+            set_border(self, ws, "A5:k5", "medium", "D9D9D9")
+
+            ws.row_dimensions[2].height = 23
+            ws.column_dimensions['A'].width = 7
+            ws.column_dimensions['B'].width = 24
+            ws.column_dimensions['C'].width = 24
+            ws.column_dimensions['D'].width = 24
+            ws.column_dimensions['E'].width = 5
+            ws.column_dimensions['F'].width = 10
+            ws.column_dimensions['G'].width = 12
+            ws.column_dimensions['H'].width = 12
+            ws.column_dimensions['I'].width = 20
+            ws.column_dimensions['J'].width = 45
+            ws.column_dimensions['K'].width = 45
+
+            ws.merge_cells('B2:k2')
+            ws['B2'].font = Font(name='Aptos Narrow', size=12, bold=True, color='2F75B5')
+            ws['B2'].alignment = Alignment(horizontal="left", vertical="center", wrap_text=True)
+            ws['B2'] = 'DIRESA PASCO - DEIT: PROMOCIÓN DE LA SALUD (CONTROL DE CALIDAD)  - ' + request.GET['anio']
+
+            ws.merge_cells('B3:k3')
+            ws['B3'].font = Font(name='Aptos Narrow', size=9, bold=True, color='305496')
+            ws['B3'] = 'CODIFICACION: '
+
+            ws.merge_cells('A5:k5')
+            ws['A5'].font = Font(name='Aptos Narrow', size=9, bold=True, color='757171')
+            ws['A5'] = 'Fuente: BD_HISMINSA con Fecha: ' + date.today().strftime('%Y-%m-%d') + ' a las 08:30 horas'
+
+            ws['A7'] = '#'
+            ws['A7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            ws['A7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            ws['A7'].alignment = Alignment(horizontal="center", vertical="center")
+            ws['A7'].fill = PatternFill(start_color='CBD5F5', end_color='CBD5F5', fill_type='solid')
+
+            ws['B7'] = 'Provincia'
+            ws['B7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            ws['B7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            ws['B7'].alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+            ws['B7'].fill = PatternFill(start_color='CBD5F5', end_color='CBD5F5', fill_type='solid')
+
+            ws['C7'] = 'Distrito'
+            ws['C7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            ws['C7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            ws['C7'].alignment = Alignment(horizontal="center", vertical="center")
+            ws['C7'].fill = PatternFill(start_color='CBD5F5', end_color='CBD5F5', fill_type='solid')
+
+            ws['D7'] = 'Establecimiento'
+            ws['D7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            ws['D7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            ws['D7'].alignment = Alignment(horizontal="center", vertical="center")
+            ws['D7'].fill = PatternFill(start_color='CBD5F5', end_color='CBD5F5', fill_type='solid')
+
+            ws['E7'] = 'Mes'
+            ws['E7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            ws['E7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            ws['E7'].alignment = Alignment(horizontal="center", vertical="center")
+            ws['E7'].fill = PatternFill(start_color='CBD5F5', end_color='CBD5F5', fill_type='solid')
+
+            ws['F7'] = 'Documento'
+            ws['F7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            ws['F7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            ws['F7'].alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+            ws['F7'].fill = PatternFill(start_color='CBD5F5', end_color='CBD5F5', fill_type='solid')
+
+            ws['G7'] = 'Fecha Nacido'
+            ws['G7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            ws['G7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            ws['G7'].alignment = Alignment(horizontal="center", vertical="center")
+            ws['G7'].fill = PatternFill(start_color='CBD5F5', end_color='CBD5F5', fill_type='solid')
+
+            ws['H7'] = 'Fecha Aten.'
+            ws['H7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            ws['H7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            ws['H7'].alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+            ws['H7'].fill = PatternFill(start_color='CBD5F5', end_color='CBD5F5', fill_type='solid')
+
+            ws['I7'] = 'Reg. Manual'
+            ws['I7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            ws['I7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            ws['I7'].alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+            ws['I7'].fill = PatternFill(start_color='abc7fb', end_color='abc7fb', fill_type='solid')
+
+            ws['J7'] = 'Sub Producto'
+            ws['J7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            ws['J7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            ws['J7'].alignment = Alignment(horizontal="center", vertical="center")
+            ws['J7'].fill = PatternFill(start_color='abc7fb', end_color='abc7fb', fill_type='solid')
+
+            ws['K7'] = 'Observación'
+            ws['K7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+            ws['K7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+            ws['K7'].alignment = Alignment(horizontal="center", vertical="center")
+            ws['K7'].fill = PatternFill(start_color='abc7fb', end_color='abc7fb', fill_type='solid')
+
+            if request.GET['prov'] == 'TODOS':
+                dataNom = cc.objects.filter(anio=request.GET['anio']).order_by('provincia')
+            elif request.GET['prov'] != 'TODOS' and request.GET['dist'] == 'TODOS':
+                dataNom = cc.objects.filter(anio=request.GET['anio'], cod_prov=request.GET['prov']).order_by('provincia')
+            elif request.GET['prov'] != 'TODOS' and request.GET['dist'] != 'TODOS' and request.GET['eess'] == 'TODOS':
+                dataNom = cc.objects.filter(anio=request.GET['anio'], cod_dist=request.GET['dist']).order_by('provincia')
+            elif request.GET['prov'] != 'TODOS' and request.GET['dist'] != 'TODOS' and request.GET['eess'] != 'TODOS':
+                dataNom = cc.objects.filter(anio=request.GET['anio'], cod_eess=request.GET['eess']).order_by('provincia')
+            dataNom = json.loads(serializers.serialize('json', dataNom, indent=2, use_natural_foreign_keys=True))
+
+            cont = 8
+            cant = len(dataNom)
+            num=1
+            if cant > 0:
+                for cc_nom in dataNom:
+                    ws.cell(row=cont, column=1).value = num
+                    ws.cell(row=cont, column=1).alignment = Alignment(horizontal="center")
+                    ws.cell(row=cont, column=2).value = cc_nom['fields']['provincia']
+                    ws.cell(row=cont, column=3).value = cc_nom['fields']['distrito']
+                    ws.cell(row=cont, column=4).value = cc_nom['fields']['eess']
+                    ws.cell(row=cont, column=4).alignment = Alignment(wrap_text=True)
+                    ws.cell(row=cont, column=5).value = cc_nom['fields']['mes']
+                    ws.cell(row=cont, column=5).alignment = Alignment(horizontal="center")
+                    ws.cell(row=cont, column=6).value = cc_nom['fields']['documento']
+                    ws.cell(row=cont, column=6).alignment = Alignment(horizontal="center")
+                    ws.cell(row=cont, column=7).value = cc_nom['fields']['fec_nac']
+                    ws.cell(row=cont, column=7).alignment = Alignment(horizontal="center")
+                    ws.cell(row=cont, column=8).value = cc_nom['fields']['fec_atencion']
+                    ws.cell(row=cont, column=8).alignment = Alignment(horizontal="center")
+                    ws.cell(row=cont, column=9).value = cc_nom['fields']['reg_manual']
+                    ws.cell(row=cont, column=9).alignment = Alignment(horizontal="center")
+                    ws.cell(row=cont, column=10).value = cc_nom['fields']['subproduct']
+                    ws.cell(row=cont, column=10).alignment = Alignment(wrap_text=True)
+                    ws.cell(row=cont, column=11).value = cc_nom['fields']['observacion']
+                    ws.cell(row=cont, column=11).alignment = Alignment(horizontal="center")
+
+                    cont = cont+1
+                    num = num+1
+
+            nombre_archivo = "DEIT_PASCO PROMSA CONTROL DE CALIDAD.xlsx"
+            response = HttpResponse(content_type="application/ms-excel")
+            contenido = "attachment; filename={0}".format(nombre_archivo)
+            response["Content-Disposition"] = contenido
+            ws.title = 'NOMINAL'
             wb.save(response)
             return response
