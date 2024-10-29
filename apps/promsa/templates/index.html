@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load static  %}
+
+{% block title %}
+	FED MC03
+{% endblock title %}
+
+{% block styles %}
+
+{% endblock styles %}
+
+{% block content %}
+
+<div id="appPromsa">
+    <div class="row">
+        <div class="col-lg-6 offset-md-3 col-sm-8"><br><br>
+            <div class="card notes2 shadow" style="background: #c7e2f7;">
+                <div class="card-body">
+                    <h3 class="mt-4 mb-2 text-center text-danger">Promoción de la Salud</h3>
+                    <form method="GET" @submit.prevent="PrintExcel">
+                        <div class="mb-2 col-md-6 select2-sm">
+                            <label class="text-start font-13 mb-1"><b>Seleccione una Provincia: </b></label>
+                            <select class="form-select-sm w-100" name="provincia" id="provincia" @change="listDistritos" v-select2="''">
+                                {% for prov in provincia %}
+                                    <option value="{{ prov.codigo }}">{{ prov.nombre }}</option>
+                                {% endfor %}
+                                <option value="TODOS" selected>TODOS</option>
+                            </select>
+                        </div>
+                        <div class="mb-2 col-md-6 select2-sm">
+                            <label class="text-start font-13 mb-1"><b>Seleccione un Distrito: </b></label>
+                            <select class="form-control-sm w-100" name="distrito" id="distrito" @change="listDistritos" v-select2="''">
+                                <option v-for="item in listDistricts" :value="item.pk">[[ item.fields.nombre ]]</option>
+                                <option value="TODOS" selected>TODOS</option>
+                            </select>
+                        </div>
+                        <div class="mb-2 col-md-6 select2-sm">
+                            <label class="text-start font-13 mb-1"><b>Seleccione un EESS: </b></label>
+                            <select class="form-control-sm w-100" name="establecimiento" id="establecimiento" v-select2="''">
+                                <!-- <option v-for="item in listDis" :value="item.pk">[[ item.fields.nombre ]]</option>
+                                <option value="TODOS" selected>TODOS</option> -->
+                                <option value="TODOS" selected>TODOS</option>
+                            </select>
+                        </div>
+                        <div class="mb-2 col-md-6 select2-sm">
+                            <label class="text-start font-13 mb-1"><b>Seleccione Año: </b></label>
+                            <select class="form-control-sm w-100" name="anio" id="anio" v-model="anio" v-select2="''">
+                            </select>
+                        </div>
+                        <div class="mb-2 col-md-6 select2-sm">
+                            <label class="text-start font-13 mb-1"><b>Seleccione Tipo: </b></label>
+                            <select class="form-control-sm w-100" name="tipo" id="tipo" v-select2="''">
+                                <option value="dit001_fng">1001 - Familias con menores 12M y gest. recib. sesiones demost.</option>
+                                <option value="dit001_acn">1001 - Actores Sociales Capacitados</option>
+                                <option value="mat002vg">002 - Materno Neonatal - Familia de la Gestante recib. consej.</option>
+                                <option value="mat002vp">002 - Materno Neonatal - Familia de la Puerpera recib. consej.</option>
+                                <option value="mat002dc">002 - Materno Neonatal - Docentes Capacitados en SSR</option>
+                            </select>
+                        </div>
+                        <div class="col-md-12 mt-3">
+                            <button class="btn btn-outline-primary btn-block w-100 mb-0" type="submit"><i class="fa fa-print"></i> Descargar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block scripts %}
+
+<script src="{% static 'js/vue/promsa.js' %}"></script>
+
+{% endblock scripts %}

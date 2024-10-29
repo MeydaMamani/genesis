@@ -6,6 +6,14 @@
     font-size: 10px;
 }
 
+.font-11{
+    font-size: 11px;
+}
+
+.font-12{
+    font-size: 12px;
+}
+
 .font-13{
     font-size: 13px;
 }
@@ -88,6 +96,18 @@
     color: #000;
 }
 
+.notes::before, .notes2::before {
+    content:"";
+    background: #ff8c00 radial-gradient(at 8px 8px, rgba(255,255,255,0), rgba(0,0,0,0.5));
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    position: absolute;
+    top: 5px;
+    left: calc(50% - 12px);
+    box-shadow: 4px 4px 3px rgba(0,0,0,0.5);
+}
+
 .select2-results__option[aria-selected]{
     font-size: 11px !important;
     color: #5E5E5E;
@@ -114,3 +134,28 @@
 .select2-container--default .select2-results>.select2-results__options{
     font-size: 12px !important;
 }
+
+.card-stats{
+    border-radius: 0px;
+    margin-top: 40px;
+}
+
+.card .card-icon, .card .card-text{
+    border-radius: 3px;
+    background-color: #999;
+    padding: 10px;
+    margin-top: -40px;
+    margin-right: 15px;
+    float: left;
+    text-align: right;
+}
+
+.card-stats .card-header-icon i{
+    font-size: 36px;
+    line-height: 56px;
+    width: 56px;
+    height: 56px;
+    text-align: center;
+    color: white;
+}
+

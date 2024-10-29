@@ -21,8 +21,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     re_path(r'^', include('apps.dashboard.urls', namespace='dashboard')),
     path('fed2425/',include('apps.fed2425.urls', namespace='fed2425')),
-    # path('main/',include('apps.main.urls', namespace='main')),
-    # path('packages/',include('apps.packages.urls', namespace='packages')),
-    # path('boards/',include('apps.boards.urls', namespace='boards')),
+    path('followup/',include('apps.followup.urls', namespace='followup')),
     path('person/',include('apps.person.urls', namespace='person')),
+    path('promsa/',include('apps.promsa.urls', namespace='promsa')),
 ]
