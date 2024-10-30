@@ -11,7 +11,7 @@
 
     <link rel="stylesheet" href="{% static 'css/custom.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/bootstrap-progressbar-3.3.4.min.css' %}">
+    <!-- <link rel="stylesheet" href="{% static 'css/bootstrap-progressbar-3.3.4.min.css' %}"> -->
     <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/nucleo-icons.css' %}">
     <link rel="stylesheet" href="{% static 'css/nucleo-svg.css' %}">
@@ -77,8 +77,12 @@
                     </li>
                     <li><a><i class="fa fa-male"></i> Seguimiento <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
-                            <li><a href="#">Pacientes</a></li>
-                            <li><a href="#">Anemia Niños</a></li>
+                            <li><a href="{% url 'promsa:promsa' %}">Promsa</a></li>
+                        </ul>
+                    </li>
+                    <li><a><i class="fa fa-download"></i> Descargas <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu">
+                            <li><a href="{% url 'dashboard:operacional' %}">Reportes Operacionales</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -189,7 +193,7 @@
     <script src="{% static 'js/custom.min.js' %}"></script>
     <script src="{% static 'js/chart.min.js' %}"></script>
     <script src="{% static 'js/vue.js' %}"></script>
-    <script src="{% static 'js/bootstrap-progressbar.min.js' %}"></script>
+    <!-- <script src="{% static 'js/bootstrap-progressbar.min.js' %}"></script> -->
     <script src="{% static 'js/jquery.easypiechart.min.js' %}"></script>
     <script src="{% static 'js/sweetalert.min.js' %}"></script>
     <script src="{% static 'js/gauge.min.js' %}"></script>

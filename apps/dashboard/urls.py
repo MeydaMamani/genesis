@@ -11,4 +11,5 @@ urlpatterns = [
     path('logout/', login_required(views.logoutUser), name='logout'),
     path('home/', login_required(views.HomeView.as_view()), name='home'),
     path('dash/', login_required(views.DashView.as_view()), name='dash'),
+    path('operacional/', login_required(views.OperacionalMinsaView.as_view()), name='operacional'),
 ]

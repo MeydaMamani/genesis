@@ -84,3 +84,7 @@ def logoutUser(request):
 
 class DashView(TemplateView):
     template_name = 'dash.html'
+
+
+class OperacionalMinsaView(TemplateView):
+    template_name = 'operacionales/index.html'
