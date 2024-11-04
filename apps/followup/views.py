@@ -315,9 +315,6 @@ class PrintPadronNom(View):
         wb = Workbook()
         ws = wb.active
 
-        locale.setlocale(locale.LC_ALL, "C")
-        nameMonth = date(1900, int(request.GET['mes']), 1).strftime('%B')
-
         def set_border(self, ws, cell_range, types, colors):
             thin = Side(border_style=types, color=colors)
             for row in ws[cell_range]:
@@ -368,7 +365,7 @@ class PrintPadronNom(View):
         ws.merge_cells('B2:AF2')
         ws['B2'].font = Font(name='Aptos Narrow', size=12, bold=True, color='2F75B5')
         ws['B2'].alignment = Alignment(horizontal="left", vertical="center", wrap_text=True)
-        ws['B2'] = 'DIRESA PASCO - DEIT: Padron Nominal - ' + nameMonth.upper() + ' ' + request.GET['anio']
+        ws['B2'] = 'DIRESA PASCO - DEIT: Padron Nominal'
 
         ws.merge_cells('B3:AF3')
         ws['B3'].font = Font(name='Aptos Narrow', size=9, bold=True, color='305496')
@@ -566,17 +563,12 @@ class PrintPadronNom(View):
         ws['AF5'].alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
         ws['AF5'].fill = PatternFill(start_color='CBD5F5', end_color='CBD5F5', fill_type='solid')
 
-        if len(request.GET['mes']) == 1:
-            mes = '0'+request.GET['mes']
-        else:
-            mes = request.GET['mes']
-
         if request.GET['prov'] == 'TODOS':
-            dataNom = padron_nom.objects.filter(mes=request.GET['anio']+mes).order_by('provincia')
+            dataNom = padron_nom.objects.all().order_by('provincia')
         elif request.GET['prov'] != 'TODOS' and request.GET['dist'] == 'TODOS':
-            dataNom = padron_nom.objects.filter(mes=request.GET['anio']+mes, cod_prov=request.GET['prov']).order_by('provincia')
+            dataNom = padron_nom.objects.filter(cod_prov=request.GET['prov']).order_by('provincia')
         elif request.GET['prov'] != 'TODOS' and request.GET['dist'] != 'TODOS':
-            dataNom = padron_nom.objects.filter(mes=request.GET['anio']+mes, cod_dist=request.GET['dist']).order_by('provincia')
+            dataNom = padron_nom.objects.filter(cod_dist=request.GET['dist']).order_by('provincia')
         dataNom = json.loads(serializers.serialize('json', dataNom, indent=2, use_natural_foreign_keys=True))
 
         cont = 6

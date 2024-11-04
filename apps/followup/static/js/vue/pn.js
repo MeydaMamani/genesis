@@ -6,30 +6,13 @@ new Vue({
         listDistricts: [],
         listActas: [],
         errors: [],
-        anio: 0,
-        mes: 0,
         total: 0,
         cumple: 0,
     },
     created:function(){
-        this.listYears();
+
     },
     methods:{
-        listYears: function(){
-            let fec = new Date();
-            var selectYear = document.getElementById("anio");
-            for(var i = 2024; i<=fec.getFullYear(); i++)selectYear.options.add(new Option(i,i));
-            var selectMonth = document.getElementById("mes");
-            for(var i = 1; i<=12; i++)selectMonth.options.add(new Option(new Date(i.toString()).toLocaleString('default', { month: 'long' }).toUpperCase(),i));
-
-            if(this.anio == 0){
-                this.anio = new Date().getFullYear();
-            }
-            if(this.mes == 0){
-                this.mes = new Date().getMonth()+1;
-            }
-        },
-
         listDistritos(e) {
             axios.get('filterDist/', { params: { id: e.target.value } })
             .then(respuesta => {
@@ -82,7 +65,7 @@ new Vue({
         PrintPadron() {
             let prov = $("#provincia1").val();
             let dist = $("#distrito1").val();
-            url_ = window.location.origin + window.location.pathname + 'padronNom/?prov='+prov+'&dist='+dist+'&anio='+this.anio+'&mes='+this.mes;
+            url_ = window.location.origin + window.location.pathname + 'padronNom/?prov='+prov+'&dist='+dist;
             window.open(url_, '_parent');
         },
     },
