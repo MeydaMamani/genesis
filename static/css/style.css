@@ -159,3 +159,14 @@
     color: white;
 }
 
+#sello_pn thead tr th {
+    position: sticky;
+    top: -1px;
+    z-index: 10;
+    background: #f6f6fb !important;
+}
+
+#sello_pn {
+    height: 320px;
+    overflow: auto;
+}

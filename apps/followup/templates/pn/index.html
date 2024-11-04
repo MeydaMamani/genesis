@@ -1,0 +1,324 @@
+{% extends "base.html" %}
+{% load static  %}
+
+{% block title %}
+	SELLO  MUNICIPAL
+{% endblock title %}
+
+{% block styles %}
+
+{% endblock styles %}
+
+{% block content %}
+
+<div id="appPadronNom">
+    <div class="">
+        <h3 class="mb-2 h4 font-weight-normal text-white">Sello Municipal</h3>
+        <div class="row">
+            <div class="col-md-11">
+                <div class="card">
+                    <div class="card-body p-1">
+                        <form method="POST" @submit.prevent="sendFormat">
+                            {% csrf_token %}
+                            <div class="form-group col-md-2 pr-0 mb-1 mt-2">
+                                <select class="form-select-sm w-100" name="provincia" id="provincia" @change="listDistritos" v-select2="''">
+                                    {% for prov in provincia %}
+                                        <option value="{{ prov.codigo }}">{{ prov.nombre }}</option>
+                                    {% endfor %}
+                                    <option value="TODOS" selected>TODOS</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-2 pr-0 mb-1 mt-2">
+                                <select class="form-control-sm w-100" name="distrito" id="distrito" v-select2="''">
+                                    <option v-for="item in listDistricts" :value="item.pk">[[ item.fields.nombre ]]</option>
+                                    <option value="TODOS" selected>TODOS</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-md-2 mb-1 mt-2">
+                                <select class="form-control-sm w-100" name="seguro" id="seguro">
+                                    <option value="MINSA">MINSA</option>
+                                    <option value="ESSALUD">ESSALUD</option>
+                                    <option value="USUARIO">USUARIO</option>
+                                    <option value="PARTICULAR">PARTICULAR</option>
+                                    <option value="TODOS" selected>TODOS</option>
+                                </select>
+                            </div>
+                            <div class="col-md-5 pl-0 d-flex mb-1 mt-2">
+                                <div class="form-check form-check-inline mr-2">
+                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="5" checked>
+                                    <label class="form-check-label font-12 m-0" for="inlineCheckbox1">May</label>
+                                </div>
+                                <div class="form-check form-check-inline mr-2">
+                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="6" checked>
+                                    <label class="form-check-label font-12 m-0" for="inlineCheckbox2">Jun</label>
+                                </div>
+                                <div class="form-check form-check-inline mr-2">
+                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox1" value="7" checked>
+                                    <label class="form-check-label font-12 m-0" for="inlineCheckbox3">Jul</label>
+                                </div>
+                                <div class="form-check form-check-inline mr-2">
+                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox4" value="8" checked>
+                                    <label class="form-check-label font-12 m-0" for="inlineCheckbox4">Ago</label>
+                                </div>
+                                <div class="form-check form-check-inline mr-2">
+                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox5" value="9" checked>
+                                    <label class="form-check-label font-12 m-0" for="inlineCheckbox5">Set</label>
+                                </div>
+                                <div class="form-check form-check-inline mr-2">
+                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox6" value="10" checked>
+                                    <label class="form-check-label font-12 m-0" for="inlineCheckbox6">Oct</label>
+                                </div>
+                                <div class="form-check form-check-inline mr-2">
+                                    <input class="form-check-input" type="checkbox" id="inlineCheckbox7" value="11" checked>
+                                    <label class="form-check-label font-12 m-0" for="inlineCheckbox7">Nov</label>
+                                </div>
+                            </div>
+                            <div class="col-md-1 mt-2 mb-2 pr-0">
+                                <button class="btn btn-dark btn-sm px-2 m-0 buscar" type="submit"><i class="fa fa-search"></i> </button>
+                                <button class="btn btn-success btn-sm px-2 m-0" @click="PrintSello" type="button"><i class="fa fa-print"></i> </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-1 p-0">
+                <button type="button" class="btn btn-danger btn-sm w-100 px-2 mb-2" @click="ActasHomol" data-bs-toggle="modal" data-bs-target="#modalActas">Actas</button>
+                <button type="button" class="btn btn-secondary btn-sm w-100 px-2 mb-0" data-bs-toggle="modal" data-bs-target="#modalPadron">Padron</button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <div class="col-lg-12 col-md-6 col-sm-6">
+                <div class="card card-stats shadow">
+                    <div class="card-header card-header-icon py-3">
+                        <div class="card-icon bg-gradient-info">
+                            <i class="ni ni-single-02 opacity-10"></i>
+                        </div>
+                        <p class="text-right m-0">Total</p>
+                        <h3 class="text-right m-0">[[ total ]]</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-6 col-sm-6">
+                <div class="card card-stats shadow-card">
+                    <div class="card-header card-header-icon py-3">
+                        <div class="card-icon bg-gradient-success">
+                            <i class="ni ni-like-2 opacity-10"></i>
+                        </div>
+                        <p class="text-right m-0">Cumplen</p>
+                        <h3 class="text-right m-0">[[ cumple ]]</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12 col-md-6 col-sm-6 mt-3">
+                <div class="card shadow text-center">
+                    <div class="card-body p-0">
+                        <span class="chart" data-percent="0"><span class="percent"></span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mt-5 p-0">
+            <div class="card">
+                <div class="card-body">
+                    <div class="table-responsive" id="sello_pn">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr class="font-11">
+                                    <th class="align-middle p-1 text-white" style="background: #3C495E !important;">#</th>
+                                    <th class="align-middle p-1 text-white" style="background: #3C495E !important;">Distrito</th>
+                                    <th class="align-middle p-1 text-white" style="background: #3C495E !important;">Total</th>
+                                    <th class="align-middle p-1 text-white" style="background: #3C495E !important;">Dni</th>
+                                    <th class="align-middle p-1 text-white" style="background: #3C495E !important;">Dirección</th>
+                                    <th class="align-middle p-1 text-white" width="100" style="background: #3C495E !important;">Avance</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="text-center font-10" v-for="item, key in lists[1]">
+                                    <td class="align-middle p-1">[[ key+1 ]]</td>
+                                    <td class="align-middle p-1 text-left">[[ item.distrito ]]</td>
+                                    <td class="align-middle p-1">[[ item.den ]]</td>
+                                    <td class="align-middle p-1">[[ item.dni ]]</td>
+                                    <td class="align-middle p-1">[[ item.direc ]]</td>
+                                    <td class="align-middle p-1">
+                                        <div class="progress-wrapper">
+                                            <span class="font-12 font-weight-bold">[[ parseFloat(item.menor_valor/item.den*100).toFixed(1) ]] %</span>
+                                            <div class="progress">
+                                                <div v-if="(item.menor_valor/item.den)*100 < 34" class="progress-bar bg-danger" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" :style="'width:'+ item.menor_valor/item.den*100 +'%'"></div>
+                                                <div v-else-if="(item.menor_valor/item.den)*100 > 33 && (item.menor_valor/item.den)*100 < 67" class="progress-bar bg-warning" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" :style="'width:'+ item.menor_valor/item.den*100 +'%'"></div>
+                                                <div v-else-if="(item.menor_valor/item.den)*100 > 66 && (item.menor_valor/item.den)*100 < 91" class="progress-bar bg-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" :style="'width:'+ item.menor_valor/item.den*100 +'%'"></div>
+                                                <div v-else-if="(item.menor_valor/item.den)*100 > 90" class="progress-bar bg-primary" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" :style="'width:'+ item.menor_valor/item.den*100 +'%'"></div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1" style="z-index: 0;">
+            <br>
+            <img src="{% static 'img/girls.png' %}" alt="" width="220" height="380" style="margin-left: -35px;">
+        </div>
+    </div>
+    <div class="modal fade" id="modalActas" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myModalLabel2">Actas de Homologación 2024</h5>
+                    <button type="button" class="btn-close text-dark d-flex align-items-center font-weight-bolder" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p class="font-13">
+                        <b class="text-danger">0: No presento</b> &nbsp; &nbsp;&nbsp;
+                        <b class="text-primary">1: Oportuno</b> &nbsp; &nbsp;&nbsp;
+                        <b class="text-success">2: No Oportuno</b>
+                    </p>
+                    <div class="table-responsive" id="sello_pn">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr class="font-10 text-center" style="background: #e0eff5;">
+                                    <th class="align-middle p-1">#</th>
+                                    <th class="align-middle p-1">Distrito</th>
+                                    <th class="align-middle p-1">Ene</th>
+                                    <th class="align-middle p-1">Feb</th>
+                                    <th class="align-middle p-1">Mar</th>
+                                    <th class="align-middle p-1">Abr</th>
+                                    <th class="align-middle p-1">May</th>
+                                    <th class="align-middle p-1">Jun</th>
+                                    <th class="align-middle p-1">Jul</th>
+                                    <th class="align-middle p-1">Ago</th>
+                                    <th class="align-middle p-1">Set</th>
+                                    <th class="align-middle p-1">Oct</th>
+                                    <th class="align-middle p-1">Nov</th>
+                                    <th class="align-middle p-1">Dic</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="text-center font-9" v-for="item, key in listActas">
+                                    <td class="align-middle p-1">[[ key+1 ]]</td>
+                                    <td class="align-middle text-left p-1">[[ item.fields.distrito ]]</td>
+                                    <td class="align-middle p-1" v-if="[[ item.fields.ene ]] == 0" style="background: #eec9c9;">[[ item.fields.ene ]]</td>
+                                    <td class="align-middle p-1" v-else-if="[[ item.fields.ene ]] == 1" style="background: #c9e3f9;">[[ item.fields.ene ]]</td>
+                                    <td class="align-middle p-1" v-else-if="[[ item.fields.ene ]] == 2" style="background: #c9f9d2;">[[ item.fields.ene ]]</td>
+                                    <td class="align-middle p-1" v-else-if="[[ item.fields.ene ]] == 3" style="background: #f5f8b8;">[[ item.fields.ene ]]</td>
+
+                                    <td class="align-middle p-1" v-if="[[ item.fields.feb ]] == 0" style="background: #eec9c9;">[[ item.fields.feb ]]</td>
+                                    <td class="align-middle p-1" v-else-if="[[ item.fields.feb ]] == 1" style="background: #c9e3f9;">[[ item.fields.feb ]]</td>
+                                    <td class="align-middle p-1" v-else-if="[[ item.fields.feb ]] == 2" style="background: #c9f9d2;">[[ item.fields.feb ]]</td>
+                                    <td class="align-middle p-1" v-else-if="[[ item.fields.feb ]] == 3" style="background: #f5f8b8;">[[ item.fields.feb ]]</td>
+
+                                    <td class="align-middle p-1" v-if="[[ item.fields.mar ]] == 0" style="background: #eec9c9;">[[ item.fields.mar ]]</td>
+                                    <td class="align-middle p-1" v-else-if="[[ item.fields.mar ]] == 1" style="background: #c9e3f9;">[[ item.fields.mar ]]</td>
+                                    <td class="align-middle p-1" v-else-if="[[ item.fields.mar ]] == 2" style="background: #c9f9d2;">[[ item.fields.mar ]]</td>
+                                    <td class="align-middle p-1" v-else-if="[[ item.fields.mar ]] == 3" style="background: #f5f8b8;">[[ item.fields.mar ]]</td>
+
+                                    <td class="align-middle p-1" v-if="[[ item.fields.abr ]] == 0" style="background: #eec9c9;">[[ item.fields.abr ]]</td>
+                                    <td class="align-middle p-1" v-else-if="[[ item.fields.abr ]] == 1" style="background: #c9e3f9;">[[ item.fields.abr ]]</td>
+                                    <td class="align-middle p-1" v-else-if="[[ item.fields.abr ]] == 2" style="background: #c9f9d2;">[[ item.fields.abr ]]</td>
+                                    <td class="align-middle p-1" v-else-if="[[ item.fields.abr ]] == 3" style="background: #f5f8b8;">[[ item.fields.abr ]]</td>
+
+                                    <td class="align-middle p-1" v-if="[[ item.fields.may ]] == 0" style="background: #eec9c9;">[[ item.fields.may ]]</td>
+                                    <td class="align-middle p-1" v-else-if="[[ item.fields.may ]] == 1" style="background: #c9e3f9;">[[ item.fields.may ]]</td>
+                                    <td class="align-middle p-1" v-else-if="[[ item.fields.may ]] == 2" style="background: #c9f9d2;">[[ item.fields.may ]]</td>
+                                    <td class="align-middle p-1" v-else-if="[[ item.fields.may ]] == 3" style="background: #f5f8b8;">[[ item.fields.may ]]</td>
+
+                                    <td class="align-middle p-1" v-if="[[ item.fields.jun ]] == 0" style="background: #eec9c9;">[[ item.fields.jun ]]</td>
+                                    <td class="align-middle p-1" v-else-if="[[ item.fields.jun ]] == 1" style="background: #c9e3f9;">[[ item.fields.jun ]]</td>
+                                    <td class="align-middle p-1" v-else-if="[[ item.fields.jun ]] == 2" style="background: #c9f9d2;">[[ item.fields.jun ]]</td>
+                                    <td class="align-middle p-1" v-else-if="[[ item.fields.jun ]] == 3" style="background: #f5f8b8;">[[ item.fields.jun ]]</td>
+
+                                    <td class="align-middle p-1" v-if="[[ item.fields.jul ]] == 0" style="background: #eec9c9;">[[ item.fields.jul ]]</td>
+                                    <td class="align-middle p-1" v-else-if="[[ item.fields.jul ]] == 1" style="background: #c9e3f9;">[[ item.fields.jul ]]</td>
+                                    <td class="align-middle p-1" v-else-if="[[ item.fields.jul ]] == 2" style="background: #c9f9d2;">[[ item.fields.jul ]]</td>
+                                    <td class="align-middle p-1" v-else-if="[[ item.fields.jul ]] == 3" style="background: #f5f8b8;">[[ item.fields.jul ]]</td>
+
+                                    <td class="align-middle p-1" v-if="[[ item.fields.ago ]] == 0" style="background: #eec9c9;">[[ item.fields.ago ]]</td>
+                                    <td class="align-middle p-1" v-else-if="[[ item.fields.ago ]] == 1" style="background: #c9e3f9;">[[ item.fields.ago ]]</td>
+                                    <td class="align-middle p-1" v-else-if="[[ item.fields.ago ]] == 2" style="background: #c9f9d2;">[[ item.fields.ago ]]</td>
+                                    <td class="align-middle p-1" v-else-if="[[ item.fields.ago ]] == 3" style="background: #f5f8b8;">[[ item.fields.ago ]]</td>
+
+                                    <td class="align-middle p-1" v-if="[[ item.fields.set ]] == 0" style="background: #eec9c9;">[[ item.fields.set ]]</td>
+                                    <td class="align-middle p-1" v-else-if="[[ item.fields.set ]] == 1" style="background: #c9e3f9;">[[ item.fields.set ]]</td>
+                                    <td class="align-middle p-1" v-else-if="[[ item.fields.set ]] == 2" style="background: #c9f9d2;">[[ item.fields.set ]]</td>
+                                    <td class="align-middle p-1" v-else-if="[[ item.fields.set ]] == 3" style="background: #f5f8b8;">[[ item.fields.set ]]</td>
+
+                                    <td class="align-middle p-1" v-if="[[ item.fields.oct ]] == 0" style="background: #eec9c9;">[[ item.fields.oct ]]</td>
+                                    <td class="align-middle p-1" v-else-if="[[ item.fields.oct ]] == 1" style="background: #c9e3f9;">[[ item.fields.oct ]]</td>
+                                    <td class="align-middle p-1" v-else-if="[[ item.fields.oct ]] == 2" style="background: #c9f9d2;">[[ item.fields.oct ]]</td>
+                                    <td class="align-middle p-1" v-else-if="[[ item.fields.oct ]] == 3" style="background: #f5f8b8;">[[ item.fields.oct ]]</td>
+
+                                    <td class="align-middle p-1" v-if="[[ item.fields.nov ]] == 0" style="background: #eec9c9;">[[ item.fields.nov ]]</td>
+                                    <td class="align-middle p-1" v-else-if="[[ item.fields.nov ]] == 1" style="background: #c9e3f9;">[[ item.fields.nov ]]</td>
+                                    <td class="align-middle p-1" v-else-if="[[ item.fields.nov ]] == 2" style="background: #c9f9d2;">[[ item.fields.nov ]]</td>
+                                    <td class="align-middle p-1" v-else-if="[[ item.fields.nov ]] == 3" style="background: #f5f8b8;">[[ item.fields.nov ]]</td>
+
+                                    <td class="align-middle p-1" v-if="[[ item.fields.dic ]] == 0" style="background: #eec9c9;">[[ item.fields.dic ]]</td>
+                                    <td class="align-middle p-1" v-else-if="[[ item.fields.dic ]] == 1" style="background: #c9e3f9;">[[ item.fields.dic ]]</td>
+                                    <td class="align-middle p-1" v-else-if="[[ item.fields.dic ]] == 2" style="background: #c9f9d2;">[[ item.fields.dic ]]</td>
+                                    <td class="align-middle p-1" v-else-if="[[ item.fields.dic ]] == 3" style="background: #f5f8b8;">[[ item.fields.dic ]]</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalPadron" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-gradient-success">
+                    <h5 class="modal-title" id="myModalLabel2">Padron Nominal</h5>
+                    <button type="button" class="btn-close text-dark d-flex align-items-center font-weight-bolder" data-bs-dismiss="modal" aria-label="Close">
+                        <!-- <span aria-hidden="true">&times;</span> -->
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form method="GET" @submit.prevent="PrintPadron">
+                        <div class="mb-2 col-md-6 select2-sm">
+                            <label class="text-start font-13 mb-1"><b>Seleccione una Provincia: </b></label>
+                            <select class="form-select-sm w-100" style="width: 100%;" name="provincia1" id="provincia1" @change="listDistritos" v-select2="''">
+                                {% for prov in provincia %}
+                                    <option value="{{ prov.codigo }}">{{ prov.nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-2 col-md-6 select2-sm">
+                            <label class="text-start font-13 mb-1"><b>Seleccione un Distrito: </b></label>
+                            <select class="form-control-sm w-100" style="width: 100%;" name="distrito1" id="distrito1" v-select2="''">
+                                <option v-for="item in listDistricts" :value="item.pk">[[ item.fields.nombre ]]</option>
+                                <option value="TODOS" selected>TODOS</option>
+                            </select>
+                        </div>
+                        <div class="mb-2 col-md-6 select2-sm">
+                            <label class="text-start font-13 mb-1"><b>Seleccione Año: </b></label>
+                            <select class="form-control-sm w-100" style="width: 100%;" name="anio" id="anio" v-model="anio" v-select2="''"></select>
+                        </div>
+                        <div class="mb-2 col-md-6 select2-sm">
+                            <label class="text-start font-13 mb-1"><b>Seleccione Mes: </b></label>
+                            <select class="form-control-sm w-100" style="width: 100%;" name="mes" id="mes" v-model="mes" v-select2="''"></select>
+                        </div>
+                        <div class="col-md-12 mt-3">
+                            <button class="btn btn-outline-success btn-block w-100 mb-0" type="submit"><i class="fa fa-print"></i> Descargar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block scripts %}
+
+<script src="{% static 'js/vue/pn.js' %}"></script>
+<script src="{% static 'js/js/pn.js' %}"></script>
+
+{% endblock scripts %}
