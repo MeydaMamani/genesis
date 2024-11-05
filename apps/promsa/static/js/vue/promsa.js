@@ -4,6 +4,7 @@ new Vue({
     data:{
         lists: [],
         listDistricts: [],
+        listEess: [],
         errors: [],
         anio: 0,
     },
@@ -15,16 +16,20 @@ new Vue({
             let fec = new Date();
             var selectYear = document.getElementById("anio");
             for(var i = 2024; i<=fec.getFullYear(); i++)selectYear.options.add(new Option(i,i));
-            if(this.anio == 0){
-                this.anio = new Date().getFullYear();
-            }
+            if(this.anio == 0){ this.anio = new Date().getFullYear(); }
         },
 
         listDistritos(e) {
-            console.log(e.target.value);
             axios.get('filterDist/', { params: { id: e.target.value } })
             .then(respuesta => {
                 this.listDistricts = respuesta.data
+            });
+        },
+
+        listEstab(e) {
+            axios.get('filterEstab/', { params: { id: e.target.value } })
+            .then(respuesta => {
+                this.listEess = respuesta.data
             });
         },
 

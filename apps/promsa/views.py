@@ -29,10 +29,16 @@ class PromsaView(TemplateView):
         return context
 
 
-class DistrictView(View):
+class Districts(View):
     def get(self, request, *args, **kwargs):
         dist = serializers.serialize('json', Distrito.objects.filter(prov_id=request.GET['id']), indent=2, use_natural_foreign_keys=True)
         return HttpResponse(dist, content_type='application/json')
+
+
+class EESS(View):
+    def get(self, request, *args, **kwargs):
+        eess = serializers.serialize('json', Establecimiento.objects.filter(dist_id=request.GET['id'], sector_id=7), indent=2, use_natural_foreign_keys=True)
+        return HttpResponse(eess, content_type='application/json')
 
 
 class PrintPromsa(View):
@@ -60,11 +66,12 @@ class PrintPromsa(View):
 
             ws.row_dimensions[2].height = 23
             ws.column_dimensions['A'].width = 7
-            ws.column_dimensions['B'].width = 24
-            ws.column_dimensions['C'].width = 24
-            ws.column_dimensions['D'].width = 24
-            ws.column_dimensions['F'].width = 35
-            ws.column_dimensions['G'].width = 45
+            ws.column_dimensions['B'].width = 25
+            ws.column_dimensions['C'].width = 32
+            ws.column_dimensions['D'].width = 40
+            ws.column_dimensions['F'].width = 15
+            ws.column_dimensions['G'].width = 35
+            ws.column_dimensions['H'].width = 32
 
             ws.merge_cells('B2:I2')
             ws['B2'].font = Font(name='Aptos Narrow', size=12, bold=True, color='2F75B5')
@@ -337,7 +344,7 @@ class PrintPromsa(View):
                 dataCruce = mat002_vg_cr.objects.filter(anio=request.GET['anio'], cod_dist=request.GET['dist']).order_by('provincia')
                 dataCont = mat002_vg_c.objects.filter(anio=request.GET['anio'], cod_dist=request.GET['dist']).order_by('provincia')
             elif request.GET['prov'] != 'TODOS' and request.GET['dist'] != 'TODOS' and request.GET['eess'] != 'TODOS':
-                dataNom = mat002_vg_n.objects.filter(anio=request.GET['anio'], cod_dist=request.GET['dist']).order_by('provincia')
+                dataNom = mat002_vg_n.objects.filter(anio=request.GET['anio'], cod_eess=request.GET['eess']).order_by('provincia')
                 dataCruce = mat002_vg_cr.objects.filter(anio=request.GET['anio'], cod_dist=request.GET['dist']).order_by('provincia')
                 dataCont = mat002_vg_c.objects.filter(anio=request.GET['anio'], cod_dist=request.GET['dist']).order_by('provincia')
 
@@ -355,9 +362,10 @@ class PrintPromsa(View):
             ws.column_dimensions['C'].width = 24
             ws.column_dimensions['D'].width = 24
             ws.column_dimensions['E'].width = 10
-            ws.column_dimensions['F'].width = 13
-            ws.column_dimensions['G'].width = 5
-            ws.column_dimensions['K'].width = 55
+            ws.column_dimensions['F'].width = 5
+            ws.column_dimensions['G'].width = 12
+            ws.column_dimensions['K'].width = 9
+            ws.column_dimensions['L'].width = 32
 
             ws.merge_cells('B2:L2')
             ws['B2'].font = Font(name='Aptos Narrow', size=12, bold=True, color='2F75B5')
@@ -811,7 +819,7 @@ class PrintPromsa(View):
                 dataNom = mat002_vp_n.objects.filter(anio=request.GET['anio'], cod_dist=request.GET['dist']).order_by('provincia')
                 dataCruce = mat002_vp_cr.objects.filter(anio=request.GET['anio'], cod_dist=request.GET['dist']).order_by('provincia')
             elif request.GET['prov'] != 'TODOS' and request.GET['dist'] != 'TODOS' and request.GET['eess'] != 'TODOS':
-                dataNom = mat002_vp_n.objects.filter(anio=request.GET['anio'], cod_dist=request.GET['dist']).order_by('provincia')
+                dataNom = mat002_vp_n.objects.filter(anio=request.GET['anio'], cod_eess=request.GET['eess']).order_by('provincia')
                 dataCruce = mat002_vp_cr.objects.filter(anio=request.GET['anio'], cod_dist=request.GET['dist']).order_by('provincia')
 
             dataNom = json.loads(serializers.serialize('json', dataNom, indent=2, use_natural_foreign_keys=True))
@@ -1055,7 +1063,7 @@ class PrintPromsa(View):
                 dataCruce = tbcvih016_tbc_cr.objects.filter(anio=request.GET['anio'], cod_dist=request.GET['dist']).order_by('provincia')
                 dataCont = tbcvih016_tbc_c.objects.filter(anio=request.GET['anio'], cod_dist=request.GET['dist']).order_by('provincia')
             elif request.GET['prov'] != 'TODOS' and request.GET['dist'] != 'TODOS' and request.GET['eess'] != 'TODOS':
-                dataNom = tbcvih016_tbc_n.objects.filter(anio=request.GET['anio'], cod_dist=request.GET['dist']).order_by('provincia')
+                dataNom = tbcvih016_tbc_n.objects.filter(anio=request.GET['anio'], cod_eess=request.GET['eess']).order_by('provincia')
                 dataCruce = tbcvih016_tbc_cr.objects.filter(anio=request.GET['anio'], cod_dist=request.GET['dist']).order_by('provincia')
                 dataCont = tbcvih016_tbc_c.objects.filter(anio=request.GET['anio'], cod_dist=request.GET['dist']).order_by('provincia')
 
@@ -1382,7 +1390,7 @@ class PrintPromsa(View):
                 dataCruce = tbcvih016_vih_cr.objects.filter(anio=request.GET['anio'], cod_dist=request.GET['dist']).order_by('provincia')
                 dataCont = tbcvih016_vih_c.objects.filter(anio=request.GET['anio'], cod_dist=request.GET['dist']).order_by('provincia')
             elif request.GET['prov'] != 'TODOS' and request.GET['dist'] != 'TODOS' and request.GET['eess'] != 'TODOS':
-                dataNom = tbcvih016_vih_n.objects.filter(anio=request.GET['anio'], cod_dist=request.GET['dist']).order_by('provincia')
+                dataNom = tbcvih016_vih_n.objects.filter(anio=request.GET['anio'], cod_eess=request.GET['eess']).order_by('provincia')
                 dataCruce = tbcvih016_vih_cr.objects.filter(anio=request.GET['anio'], cod_dist=request.GET['dist']).order_by('provincia')
                 dataCont = tbcvih016_vih_c.objects.filter(anio=request.GET['anio'], cod_dist=request.GET['dist']).order_by('provincia')
 
@@ -1706,7 +1714,7 @@ class PrintPromsa(View):
                 dataNom = met017_met_n.objects.filter(anio=request.GET['anio'], cod_dist=request.GET['dist']).order_by('provincia')
                 dataCruce = met017_met_cr.objects.filter(anio=request.GET['anio'], cod_dist=request.GET['dist']).order_by('provincia')
             elif request.GET['prov'] != 'TODOS' and request.GET['dist'] != 'TODOS' and request.GET['eess'] != 'TODOS':
-                dataNom = met017_met_n.objects.filter(anio=request.GET['anio'], cod_dist=request.GET['dist']).order_by('provincia')
+                dataNom = met017_met_n.objects.filter(anio=request.GET['anio'], cod_eess=request.GET['eess']).order_by('provincia')
                 dataCruce = met017_met_cr.objects.filter(anio=request.GET['anio'], cod_dist=request.GET['dist']).order_by('provincia')
 
             dataNom = json.loads(serializers.serialize('json', dataNom, indent=2, use_natural_foreign_keys=True))

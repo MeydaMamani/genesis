@@ -2,7 +2,7 @@
 {% load static  %}
 
 {% block title %}
-	FED MC03
+	PROMSA 2024
 {% endblock title %}
 
 {% block styles %}
@@ -20,7 +20,7 @@
                     <form method="GET" @submit.prevent="PrintExcel">
                         <div class="mb-2 col-md-6 select2-sm">
                             <label class="text-start font-13 mb-1"><b>Seleccione una Provincia: </b></label>
-                            <select class="form-select-sm w-100" name="provincia" id="provincia" @change="listDistritos" v-select2="''">
+                            <select class="form-control-sm w-100" name="provincia" id="provincia" @change="listDistritos">
                                 {% for prov in provincia %}
                                     <option value="{{ prov.codigo }}">{{ prov.nombre }}</option>
                                 {% endfor %}
@@ -29,7 +29,7 @@
                         </div>
                         <div class="mb-2 col-md-6 select2-sm">
                             <label class="text-start font-13 mb-1"><b>Seleccione un Distrito: </b></label>
-                            <select class="form-control-sm w-100" name="distrito" id="distrito" @change="listDistritos" v-select2="''">
+                            <select class="form-control-sm w-100" name="distrito" id="distrito" @change="listEstab" v-select2="''">
                                 <option v-for="item in listDistricts" :value="item.pk">[[ item.fields.nombre ]]</option>
                                 <option value="TODOS" selected>TODOS</option>
                             </select>
@@ -37,15 +37,13 @@
                         <div class="mb-2 col-md-6 select2-sm">
                             <label class="text-start font-13 mb-1"><b>Seleccione un EESS: </b></label>
                             <select class="form-control-sm w-100" name="establecimiento" id="establecimiento" v-select2="''">
-                                <!-- <option v-for="item in listDis" :value="item.pk">[[ item.fields.nombre ]]</option>
-                                <option value="TODOS" selected>TODOS</option> -->
+                                <option v-for="item in listEess" :value="item.pk">[[ item.fields.nombre ]]</option>
                                 <option value="TODOS" selected>TODOS</option>
                             </select>
                         </div>
                         <div class="mb-2 col-md-6 select2-sm">
                             <label class="text-start font-13 mb-1"><b>Seleccione Año: </b></label>
-                            <select class="form-control-sm w-100" name="anio" id="anio" v-model="anio" v-select2="''">
-                            </select>
+                            <select class="form-control-sm w-100" name="anio" id="anio" v-model="anio" v-select2="''"></select>
                         </div>
                         <div class="mb-2 col-md-6 select2-sm">
                             <label class="text-start font-13 mb-1"><b>Seleccione Tipo: </b></label>
@@ -76,5 +74,6 @@
 {% block scripts %}
 
 <script src="{% static 'js/vue/promsa.js' %}"></script>
+<script src="{% static 'js/js/promsa.js' %}"></script>
 
 {% endblock scripts %}
