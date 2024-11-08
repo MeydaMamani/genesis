@@ -83,6 +83,7 @@
                     </li>
                     <li><a><i class="fa fa-download"></i> Descargas <span class="fa fa-chevron-down"></span></a>
                         <ul class="nav child_menu">
+                            <li><a href="{% url 'followup:plano' %}">Archivo Plano</a></li>
                             <li><a href="{% url 'dashboard:operacional' %}">Reportes Operacionales</a></li>
                         </ul>
                     </li>
@@ -126,7 +127,7 @@
                                 <i class="fa fa-cog cursor-pointer"></i>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end px-2 py-2 me-sm-n4" aria-labelledby="dropdownMenuButton">
-                                <li>
+                                <!-- <li>
                                     <a class="dropdown-item border-radius-md" href="javascript:;">
                                         <div class="d-flex py-1">
                                             <div class="avatar avatar-sm bg-gradient-success me-3 my-auto">
@@ -137,7 +138,7 @@
                                             </div>
                                         </div>
                                     </a>
-                                </li>
+                                </li> -->
                                 <li>
                                     <a class="dropdown-item border-radius-md" href="{% url 'dashboard:logout' %}">
                                         <div class="d-flex py-1">

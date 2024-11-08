@@ -9,8 +9,8 @@ from django.db.models import Case, When, IntegerField, FloatField, ExpressionWra
 from django.db.models.functions import Cast, Round
 import json
 from datetime import date, datetime
-from apps.main.models import Sector, Provincia, Distrito, Establecimiento
-from .models import padron_nom, sello, actas_homol
+from apps.main.models import Sector, Provincia, Distrito, Establecimiento, UPS
+from .models import padron_nom, sello, actas_homol, plano
 
 # library excel
 from openpyxl import Workbook
@@ -21,6 +21,8 @@ import locale
 import datetime
 import os
 import zipfile
+from zipfile import ZIP_DEFLATED
+import csv
 
 
 # Create your views here.
@@ -619,3 +621,85 @@ class PrintPadronNom(View):
         ws.title = 'PADRON NOMINAL'
         wb.save(response)
         return response
+
+
+class PlanoView(TemplateView):
+    template_name = 'plane/index.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['provincia'] = Provincia.objects.all()
+        context['ups'] = UPS.objects.all().order_by('nombre')
+        return context
+
+
+class EESS(View):
+    def get(self, request, *args, **kwargs):
+        eess = serializers.serialize('json', Establecimiento.objects.filter(dist_id=request.GET['id'], sector_id=7), indent=2, use_natural_foreign_keys=True)
+        return HttpResponse(eess, content_type='application/json')
+
+
+def compress_file(file_data, filename):
+    zip_filename = f"{filename}.zip"
+    with zipfile.ZipFile(zip_filename, 'w', ZIP_DEFLATED) as zipf:
+        zipf.writestr(filename, file_data.getvalue())
+    return zip_filename
+
+
+class PrintPlano(View):
+    def get(self, request, *args, **kwargs):
+        wb = Workbook()
+        ws = wb.active
+        print(request.GET['eess'], request.GET['anio'], request.GET['mes'])
+
+        if request.GET['ups'] == 'TODOS':
+            if request.GET['prov'] == 'TODOS':
+                dataNom = plano.objects.filter(fec_aten__year=request.GET['anio'], mes=request.GET['mes']).order_by('provincia')
+            elif request.GET['prov'] != 'TODOS' and request.GET['dist'] == 'TODOS':
+                dataNom = plano.objects.filter(cod_prov=request.GET['prov'], fec_aten__year=request.GET['anio'], mes=request.GET['mes']).order_by('provincia')
+            elif request.GET['prov'] != 'TODOS' and request.GET['dist'] != 'TODOS' and request.GET['eess'] == 'TODOS':
+                dataNom = plano.objects.filter(cod_dist=request.GET['dist'], fec_aten__year=request.GET['anio'], mes=request.GET['mes']).order_by('provincia')
+            elif request.GET['prov'] != 'TODOS' and request.GET['dist'] != 'TODOS' and request.GET['eess'] != 'TODOS':
+                dataNom = plano.objects.filter(cod_eess=request.GET['eess'], fec_aten__year=request.GET['anio'], mes=request.GET['mes'])
+
+        else:
+            if request.GET['prov'] == 'TODOS':
+                dataNom = plano.objects.filter(id_ups=request.GET['ups'], fec_aten__year=request.GET['anio'], mes=request.GET['mes']).order_by('provincia')
+            elif request.GET['prov'] != 'TODOS' and request.GET['dist'] == 'TODOS':
+                dataNom = plano.objects.filter(id_ups=request.GET['ups'], cod_prov=request.GET['prov'], fec_aten__year=request.GET['anio'], mes=request.GET['mes']).order_by('provincia')
+            elif request.GET['prov'] != 'TODOS' and request.GET['dist'] != 'TODOS' and request.GET['eess'] == 'TODOS':
+                dataNom = plano.objects.filter(id_ups=request.GET['ups'], cod_dist=request.GET['dist'], fec_aten__year=request.GET['anio'], mes=request.GET['mes']).order_by('provincia')
+            elif request.GET['prov'] != 'TODOS' and request.GET['dist'] != 'TODOS' and request.GET['eess'] != 'TODOS':
+                dataNom = plano.objects.filter(id_ups=request.GET['ups'], cod_eess=request.GET['eess'], fec_aten__year=request.GET['anio'], mes=request.GET['mes']).order_by('provincia')
+
+
+        nombre_archivo = "archivo_plano.csv"
+        response = HttpResponse(content_type='text/csv')
+        contenido = "attachment; filename={0}".format(nombre_archivo)
+        response["Content-Disposition"] = contenido
+
+        writer = csv.writer(response)
+        writer.writerow(['Id Cita', 'Lote', 'Mes', 'Dia', 'Fec Atención','Num Pag','Num reg','Desc UPS','Sector','Red','Provincia','MicroRed',
+                         'Distrito','Cod Único','EESS','Tipo Doc','Doc Paciente','Nombres Paciente','Fec Nac Paciente','Id Etnia','Etnia',
+                         'Genero','Hist Clínica','Ficha Familiar','Financiador','Pais','Doc Personal','Nombres Personal','Profesión',
+                         'Doc Registrador','Nombres Registrador','id cond eess','id cond serv','Edad Reg','Tipo Edad','Grupo Edad','Turno',
+                         'Código','Tipo Diag','Desc Item','Lab','Id Corr Item','Id Corr Lab','Peso','Talla','Hemoglobina','PAC','PC',
+                         'Id Otra Cond','Desc Otra Cond','Desc CCPP','FUR','Fec Solic HB','Fec Result HB','Fecha Registro','Fec Modificación'])
+
+        for item in dataNom:
+            writer.writerow([item.id_cita, item.lote, item.mes, item.dia, item.fec_aten, item.num_pag, item.num_reg,
+                             item.desc_ups, item.desc_sector, item.red, item.provincia, item.microred, item.distrito, item.cod_unico,
+                             item.eess, item.tdoc_pacien, item.doc_pacien, item.nombres_pacien, item.fnac_pacien, item.id_etnia,
+                             item.desc_etnia, item.genero, item.his_clinica, item.ficha_fam, item.financiador, item.pais,
+                             item.doc_personal, item.nombres_personal, item.profesion, item.doc_regist, item.nombres_regist,
+                             item.id_cond_eess, item.id_cond_serv, item.edad_reg, item.tedad, item.grupo_edad, item.id_turno,
+                             item.codigo, item.tdiag, item.desc_item, item.vlab, item.id_corr_item, item.id_corr_lab, item.peso,
+                             item.talla, item.hb, item.pac, item.pc, item.id_otra_cond, item.dec_otra_cond, item.dec_ccpp,
+                             item.fur, item.solic_hb, item.result_hb, item.fregistro, item.fmodific])
+
+        zip_filename = compress_file(response, nombre_archivo)
+
+        with open(zip_filename, 'rb') as zip_file:
+            response = HttpResponse(zip_file.read(), content_type='application/zip')
+            response['Content-Disposition'] = f'attachment; filename="{zip_filename}"'
+            return response
+

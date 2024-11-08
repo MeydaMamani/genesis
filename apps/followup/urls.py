@@ -12,4 +12,8 @@ urlpatterns = [
     path('pn/print/', views.PrintSello.as_view(), name='print_sello'),
     path('pn/actas/', ActasView.as_view(), name='actas'),
     path('pn/padronNom/', PrintPadronNom.as_view(), name='padron_nom'),
+    path('plano/', login_required(PlanoView.as_view()), name='plano'),
+    path('plano/filterDist/', DistrictView.as_view(), name='filter_dist'),
+    path('plano/filterEstab/', views.EESS.as_view(), name='filter_eess'),
+    path('plano/print/', PrintPlano.as_view(), name='plano_print'),
 ]
