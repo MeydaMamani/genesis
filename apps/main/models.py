@@ -97,3 +97,14 @@ class Establecimiento(models.Model):
 
     def __str__(self):
         return '%s %s %s' % (self.codigo, self.nombre)
+
+
+class UPS(models.Model):
+    codigo = models.CharField(max_length=10, primary_key=True)
+    nombre = models.CharField(max_length=200)
+
+    def natural_key(self):
+        return self.codigo, self.nombre
+
+    def __str__(self):
+        return '%s %s %s' % (self.codigo, self.nombre)
