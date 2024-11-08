@@ -24,6 +24,7 @@ LOCAL_APPS = [
     'apps.fed2425',
     'apps.followup',
     'apps.promsa',
+    'apps.boards',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS

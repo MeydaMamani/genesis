@@ -24,4 +24,5 @@ urlpatterns = [
     path('followup/',include('apps.followup.urls', namespace='followup')),
     path('person/',include('apps.person.urls', namespace='person')),
     path('promsa/',include('apps.promsa.urls', namespace='promsa')),
+    path('boards/',include('apps.boards.urls', namespace='boards')),
 ]
