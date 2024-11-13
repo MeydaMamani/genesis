@@ -21,6 +21,22 @@ from openpyxl.styles import Alignment, Border, Font, PatternFill, Side, Color
 import locale
 import datetime
 
+class MC01View(TemplateView):
+    template_name = 'pregnant/MC-01.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['provincia'] = Provincia.objects.all()
+        return context
+
+
+class MC02View(TemplateView):
+    template_name = 'child/MC-02.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['provincia'] = Provincia.objects.all()
+        return context
+
+
 class MC03View(TemplateView):
     template_name = 'child/MC-03.html'
     def get_context_data(self, **kwargs):

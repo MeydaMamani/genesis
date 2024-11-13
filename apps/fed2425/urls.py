@@ -6,6 +6,8 @@ from .views import *
 app_name='fed2425'
 
 urlpatterns = [
+    path('mc01/', login_required(MC01View.as_view()), name='mc01'),
+    path('mc02/', login_required(MC02View.as_view()), name='mc02'),
     path('mc03/', login_required(MC03View.as_view()), name='mc03'),
     path('mc03/filterDist/', views.DistrictView.as_view(), name='filter_dist'),
     path('mc03/list/', ListMC03.as_view(), name='mc03_list'),
