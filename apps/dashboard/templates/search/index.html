@@ -1,0 +1,138 @@
+{% load static  %}
+
+{% block styles %}
+<style>
+    .profile{
+        position: relative;
+        height: 325px;
+        box-shadow: 5px 5px 5px #313131;
+        animation: 6s ease-in 0s infinite beat;
+    }
+
+    @keyframes beat {
+        0%, 50%, 100% { transform: scale(1, 1); }
+        30%, 80% { transform: scale(0.9, 0.9); }
+    }
+    .overlay{
+        width: 100%;
+        height: 100%;
+        background: rgb(0 0 0 / 25%);
+        cursor: pointer;
+        opacity: 1;
+        position: absolute;
+        padding: 20px;
+    }
+    .social-icons{
+        display: flex;
+        list-style: none;
+        bottom: 0px;
+        position: absolute;
+        text-align: center;
+        justify-content: center;
+        left: 22px
+    }
+    .overlay .about{
+        position: relative;
+        justify-content: center;
+        align-items: center;
+        display: flex;
+        color: #fff;
+        flex: column
+    }
+</style>
+
+{% endblock styles %}
+
+<div id="app_mc03"><br>
+    {% if load == 0 %}
+    <div class="alert alert-warning m-t-0 m-b-0">
+        <button type="button" class="close" aria-label="Close"> <span aria-hidden="true">×</span> </button>
+        <i class="fa fa-exclamation-circle p-r-10"></i> <strong class="font-bold" style="color: #651919;">USUARIO NO ENCONTRADO</strong><br>
+        <span class="">1. El usuario no se encuentra registrado...</span>
+    </div>
+    {% else %}
+    <div class="col-md-9 p-0">
+        <div class="card shadow">
+            <div class="card-header pb-0">
+                <h5 class="mb-0 font-italic" style="color: #405467;"> Resultados encontrados... <i class="fa fa-search"></i></h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive" id="tableSearch">
+                    <table class="table table-hover table-striped">
+                        <thead>
+                            <tr class="font-11 text-center">
+                                <th class="align-middle p-1 py-2">Id Cita</th>
+                                <th class="align-middle p-1">EESS</th>
+                                <th class="align-middle p-1">Pag</th>
+                                <th class="align-middle p-1">Lote</th>
+                                <th class="align-middle p-1">Edad</th>
+                                <th class="align-middle p-1">F Atención</th>
+                                <th class="align-middle p-1">Código</th>
+                                <th class="align-middle p-1">T Diag.</th>
+                                <th class="align-middle p-1">Lab</th>
+                                <th class="align-middle p-1">Corr. Lab</th>
+                                <th class="align-middle p-1">Fur</th>
+                                <th class="align-middle p-1">Grupo Edad</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in person %}
+                            <tr class="text-center font-9">
+                                <td class="align-middle p-2">{{ user.id_cita }}</td>
+                                <td class="align-middle p-2">{{ user.eess }}</td>
+                                <td class="align-middle p-2">{{ user.num_pag }}</td>
+                                <td class="align-middle p-2">{{ user.lote }}</td>
+                                <td class="align-middle p-2">{{ user.edad_reg }}</td>
+                                <td class="align-middle p-2">{{ user.fec_aten | date:"Y-m-d" }}</td>
+                                <td class="align-middle p-2">{{ user.codigo }}</td>
+                                <td class="align-middle p-2">{{ user.tdiag }}</td>
+                                <td class="align-middle p-2">
+                                    {% if user.vlab %} {{ user.vlab }} {% else %} - {% endif %}
+                                </td>
+                                <td class="align-middle p-2">{{ user.id_corr_lab }}</td>
+                                <td class="align-middle p-2">
+                                    {% if user.fur %} {{ user.fur | date:"Y-m-d" }} {% else %} - {% endif %}
+                                </td>
+                                <td class="align-middle p-2">{{ user.grupo_edad }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3"><br>
+        <div class="profile">
+            {% for user in data_get %}
+            {% if user.genero == 'F' %}
+                <img id="PreviewPhotoProfile" src="/static/img/pngtree-cartoon-of-little-boy-in-winter-coat-standing-with-funny-snowman-image_15510441.jpg" class="position-absolute bg-light z-index-0 w-100">
+            {% else %}
+                <img id="PreviewPhotoProfile" src="/static/img/Screenshot_319.png" class="position-absolute bg-light z-index-0 w-100">
+            {% endif %}
+            <div class="overlay">
+                <div class="about d-flex flex-column">
+                    <h4 style="color: #ffdfed;">{{ user.doc_pacien }}</h4>
+                    <span>{{ user.nombres_pacien }}</span><br><br><br>
+                    <div class="d-flex font-13 mb-2">
+                        <b class="pr-2">Fecha Nacido: </b> <span>{{ user.fnac_pacien | date:"Y-m-d" }}</span>
+                    </div>
+                    <div class="d-flex font-13">
+                        <b class="pr-2">Programa: </b>
+                        {% if user.programa %}
+                        <span class="badge badge-danger text-wrap">{{ user.programa }}</span>
+                        {% else %} - {% endif %}
+                    </div>
+                </div>
+                <ul class="social-icons">
+                    <button class="btn btn-outline-light btn-sm btn-round px-3"><i class="fa fa-facebook"></i></button>
+                    <button class="btn btn-outline-light btn-sm btn-round px-3"><i class="fa fa-twitter"></i></button>
+                    <button class="btn btn-outline-light btn-sm btn-round px-3"><i class="fa fa-instagram"></i></button>
+                </ul>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
