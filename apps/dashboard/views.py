@@ -16,6 +16,7 @@ from datetime import date, datetime
 from django.db import connection
 import json
 import locale
+from apps.followup.models import plano
 
 # library excel
 from openpyxl import Workbook
@@ -86,5 +87,14 @@ class DashView(TemplateView):
     template_name = 'dash.html'
 
 
-class OperacionalMinsaView(TemplateView):
-    template_name = 'operacionales/index.html'
+class SearchView(View):
+    def get(self, request, *args, **kwargs):
+        data_get = kwargs['information']
+        data = plano.objects.filter(doc_pacien=data_get).order_by('-fec_aten').values('id_cita', 'eess', 'lote', 'num_pag',
+                'doc_pacien','fnac_pacien', 'edad_reg', 'fec_aten','tdiag','codigo','vlab','id_corr_lab','fur','grupo_edad')
+        sql_query = """ SELECT DISTINCT pl.doc_pacien, 1 as id, pl.fnac_pacien, pl.nombres_pacien, pl.genero, pr.programa
+                        FROM BD_GENESIS_V2.dbo.followup_plano pl LEFT JOIN BD_GENESIS_V2.dbo.programas pr
+                        ON pl.doc_pacien = pr.NUMERO_DE_DOCUMENTO_DEL_NINO WHERE pl.doc_pacien = %s"""
+        user = plano.objects.raw(sql_query, [data_get])
+        data_user = {'person': list(data), 'data_get': list(set(user)), 'load': len(user)}
+        return render(request, 'search/index.html', data_user)

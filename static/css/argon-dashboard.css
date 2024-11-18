@@ -2516,8 +2516,8 @@ progress {
 }
 
 .table-striped>tbody>tr:nth-of-type(odd)>* {
-  --bs-table-accent-bg: var(--bs-table-striped-bg);
-  color: var(--bs-table-striped-color);
+  --bs-table-accent-bg: rgb(0 0 0 / 0%)
+  /* color: var(--bs-table-striped-color); */
 }
 
 .table-striped-columns> :not(caption)>tr> :nth-child(even) {
@@ -2532,7 +2532,7 @@ progress {
 
 .table-hover>tbody>tr:hover>* {
   --bs-table-accent-bg: var(--bs-table-hover-bg);
-  color: var(--bs-table-hover-color);
+  /* color: var(--bs-table-hover-color); */
 }
 
 .table-primary {
@@ -20296,7 +20296,7 @@ fieldset:disabled .btn {
 
 .btn:hover:not(.btn-icon-only) {
   box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
-  transform: translateY(-1px);
+  transform: translateY(-5px);
 }
 
 .btn.bg-white:hover {

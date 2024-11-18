@@ -96,6 +96,19 @@
     color: #000;
 }
 
+#tableSearch{
+    height: 400px;
+    overflow: auto;
+}
+
+#tableSearch thead tr th {
+    position: sticky;
+    top: -1px;
+    z-index: 10;
+    background: #405467 !important;
+    color: #fff;
+}
+
 .notes::before, .notes2::before {
     content:"";
     background: #ff8c00 radial-gradient(at 8px 8px, rgba(255,255,255,0), rgba(0,0,0,0.5));
@@ -169,4 +182,9 @@
 #sello_pn {
     height: 320px;
     overflow: auto;
+}
+
+
+.bg-gradient-rose{
+    background: linear-gradient(60deg,#ec407a,#d81b60);
 }

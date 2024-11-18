@@ -113,8 +113,12 @@
                 <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
                     <div class="ms-md-auto pe-md-3 d-flex align-items-center">
                         <div class="input-group mb-0">
-                            <span class="input-group-text text-body"><i class="fa fa-search" aria-hidden="true"></i></span>
-                            <input type="text" class="form-control" placeholder="Buscar...">
+                            <form class="app-search" id="main_search">
+                                <div class="col-md-12 col-sm-12 has-feedback pr-0">
+                                    <input id="search" name="search" class="form-control has-feedback-left" type="text" placeholder="Buscar...">
+                                    <span class="glyphicon glyphicon-search form-control-feedback left mt-1" aria-hidden="true"></span>
+                                </div>
+                            </form>
                         </div>
                     </div>
                     <ul class="navbar-nav justify-content-end">
@@ -163,8 +167,11 @@
             </div>
         </nav>
         <div class="container-fluid px-4 py-1">
-            {% block content %}
-            {% endblock content %}
+            <div class="content" id="loadContentSearch"></div>
+            <div id="contenido" >
+                {% block content %}
+                {% endblock content %}
+            </div>
         </div>
     </main>
 
@@ -256,7 +263,19 @@
             Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
         }
     </script>
-
+    <script>
+        //For General Search
+        $("#main_search").on('submit', function (e) {
+            e.preventDefault();
+            $("#closeSearch").click();
+            var datasearch = $(this).find('input[type=text]').val();
+            if (datasearch) {
+                document.getElementById('search').value = '';
+                $( "#contenido").hide();
+                $( "#loadContentSearch" ).load( "/home/search/" + datasearch );
+            }
+        });
+    </script>
     {% block scripts %}
 
     {% endblock scripts %}
