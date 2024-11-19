@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% load static  %}
+
+{% block title %}
+	TABLERO PROGRAMAS
+{% endblock title %}
+
+{% block styles %}
+
+{% endblock styles %}
+
+{% block content %}
+
+<div id="">
+    <div class="col-md-12 text-center mb-2">
+        <h2 class="font-weight-bold text-white" style="font-style: italic;">Tablero Programas</h2><br>
+    </div>
+    <div class="row mt-2">
+        <div class="col-md-6 mt-2 mb-3">
+            <div class="card shadow">
+                <div class="card-header card-header-text">
+                    <div class="card-text bg-gradient-info px-4 shadow">
+                        <h4 class="card-title text-white font-weight-light">Niño</h4>
+                    </div>
+                </div>
+                <div class="card-body pt-0 text-center">
+                    <div class="row">
+                        <div class="dropdown col-md-6">
+                            <a class="btn btn-outline-secondary p-2 dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="{% static 'img/juntos.png' %}" width="120" alt="niño">
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <li><a class="dropdown-item" href="https://drive.google.com/uc?id=1-7gseihMEYULDTF19ynynVwYTakoth0d&export=download">Paquete</a></li>
+                                <li><a class="dropdown-item" href="https://drive.google.com/uc?id=13R4Y24ta2bFxgxt-m8bl-PfEJUBFDFb3&export=download">Anemia</a></li>
+                            </ul>
+                        </div>
+                        <div class="dropdown col-md-5">
+                            <a class="btn btn-outline-primary p-2 dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                                <img src="{% static 'img/cuna.png' %}" width="140" alt="niño">
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                                <li><a class="dropdown-item" href="https://drive.google.com/uc?id=1--HGb3kFfSZgwHbGKPSPDQwJUelbjlfD&export=download">SAF</a></li>
+                                <li><a class="dropdown-item" href="https://drive.google.com/uc?id=1-AhjbWM2P2m4dullKl-wgwNMObx9P3lZ&export=download">SCD</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row text-center">
+                        <a href="https://drive.google.com/uc?id=1-AZFZlXgrmSirZI0CkgvfaV357zksmq3&export=download" class="col-md-5 btn btn-outline-danger m-3 p-2"><img src="{% static 'img/c1.png' %}" width="60" alt="niño"> Compromiso1</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mt-2">
+            <div class="card shadow">
+                <div class="card-header card-header-text">
+                    <div class="card-text bg-gradient-rose px-4 shadow">
+                        <h4 class="card-title text-white font-weight-light">Gestante</h4>
+                    </div>
+                </div>
+                <div class="card-body pt-0 text-center">
+                    <a href="https://drive.google.com/uc?id=1-J97iRjeeBaCLQuuHyOYddl-kJo6oByN&export=download" class="btn btn-outline-secondary m-2 p-2"><img src="{% static 'img/juntos.png' %}" width="120" alt="niño"> </a>
+                    <a href="https://drive.google.com/uc?id=1-8oC01zykNkblYlmOwnTHcA0W5y1BTI_&export=download" class="btn btn-outline-info m-3 p-2"><img src="{% static 'img/cuna.png' %}" width="120" alt="niño"> SAF</a>
+                    <a href="https://drive.google.com/uc?id=11z0LdFiSzKciwpVwiOs4E48_a_5bDhnA&export=download" class="btn btn-outline-danger m-3 p-2"><img src="{% static 'img/c1.png' %}" width="60" alt="niño"> Compromiso1</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block scripts %}
+
+{% endblock scripts %}
