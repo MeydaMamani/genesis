@@ -76,7 +76,16 @@
         </div>
         <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
             <div class="col-md-6 p-0">
-                <button type="button" class="btn btn-success btn-sm w-100" @click="PrintExcel"><i class="mdi mdi-format-list-bulleted"></i> Descargar</button>
+                <!-- <button type="button" class="btn btn-success btn-sm w-100" @click="PrintExcel"><i class="mdi mdi-format-list-bulleted"></i> Descargar</button> -->
+                <div class="dropdown">
+                    <button class="btn bg-gradient-success w-100 btn-sm dropdown-toggle py-2 px-4" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                        Descargar
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <li><a class="dropdown-item" href="#" @click="PrintExcel">Indicador Fed</a></li>
+                        <li><a class="dropdown-item" href="https://drive.google.com/uc?id=1-pgA6kKzWwZ6Ipir_fKFRhTvIHzGTLZ6&export=download">Seguimiento</a></li>
+                    </ul>
+                </div>
             </div>
             <div class="col-md-6">
                 <button type="button" class="btn btn-danger btn-sm w-100" data-bs-toggle="modal" data-bs-target="#modalficha"><i class="mdi mdi-format-list-bulleted"></i> Ficha</button>
