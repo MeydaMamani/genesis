@@ -9,7 +9,7 @@ from django.db.models import Case, When, IntegerField, FloatField, ExpressionWra
 from django.db.models.functions import Cast, Round
 import json
 from datetime import date, datetime
-from apps.main.models import Sector, Provincia, Distrito, Establecimiento, UPS
+from apps.main.models import Sector, Provincia, Distrito, Establecimiento, UPS, Profesion
 from .models import padron_nom, sello, actas_homol, plano
 
 # library excel
@@ -673,27 +673,25 @@ class PrintPlano(View):
 
 
         nombre_archivo = "archivo_plano.csv"
-        response = HttpResponse(content_type='text/csv')
+        response = HttpResponse(content_type='text/csv; charset=utf-8')
         contenido = "attachment; filename={0}".format(nombre_archivo)
         response["Content-Disposition"] = contenido
 
         writer = csv.writer(response)
-        writer.writerow(['Id Cita', 'Lote', 'Mes', 'Dia', 'Fec Atención','Num Pag','Num reg','Desc UPS','Sector','Red','Provincia','MicroRed',
-                         'Distrito','Cod Único','EESS','Tipo Doc','Doc Paciente','Nombres Paciente','Fec Nac Paciente','Id Etnia','Etnia',
-                         'Genero','Hist Clínica','Ficha Familiar','Financiador','Pais','Doc Personal','Nombres Personal','Profesión',
-                         'Doc Registrador','Nombres Registrador','id cond eess','id cond serv','Edad Reg','Tipo Edad','Grupo Edad','Turno',
-                         'Código','Tipo Diag','Desc Item','Lab','Id Corr Item','Id Corr Lab','Peso','Talla','Hemoglobina','PAC','PC',
-                         'Id Otra Cond','Desc Otra Cond','Desc CCPP','FUR','Fec Solic HB','Fec Result HB','Fecha Registro','Fec Modificación'])
+        writer.writerow(['Id Cita', 'Lote', 'Mes', 'Dia', 'Fec Atencion','Num Pag','Desc UPS','Sector','Red','Provincia','MicroRed',
+                         'Distrito','Cod Unico','EESS','Tipo Doc','Doc Paciente','Nombres Paciente','Fec Nac Paciente','Etnia',
+                         'Genero','Hist Clínica','Ficha Familiar','Financiador','Pais','Doc Personal','Profesion', 'Doc Registrador',
+                         'id cond eess','Edad Reg','Tipo Edad','Grupo Edad','Codigo','Tipo Diag', 'Desc Item','Lab','Id Corr Lab',
+                         'Peso','Talla','Hemoglobina', 'Desc Otra Cond','Desc CCPP','FUR','Fec Solic HB','Fec Result HB','Fecha Registro',
+                         'Fec Modificacion'])
 
         for item in dataNom:
-            writer.writerow([item.id_cita, item.lote, item.mes, item.dia, item.fec_aten, item.num_pag, item.num_reg,
-                             item.desc_ups, item.desc_sector, item.red, item.provincia, item.microred, item.distrito, item.cod_unico,
-                             item.eess, item.tdoc_pacien, item.doc_pacien, item.nombres_pacien, item.fnac_pacien, item.id_etnia,
-                             item.desc_etnia, item.genero, item.his_clinica, item.ficha_fam, item.financiador, item.pais,
-                             item.doc_personal, item.nombres_personal, item.profesion, item.doc_regist, item.nombres_regist,
-                             item.id_cond_eess, item.id_cond_serv, item.edad_reg, item.tedad, item.grupo_edad, item.id_turno,
-                             item.codigo, item.tdiag, item.desc_item, item.vlab, item.id_corr_item, item.id_corr_lab, item.peso,
-                             item.talla, item.hb, item.pac, item.pc, item.id_otra_cond, item.dec_otra_cond, item.dec_ccpp,
+            writer.writerow([item.id_cita, item.lote, item.mes, item.dia, item.fec_aten, item.num_pag, item.desc_ups, item.desc_sector,
+                             item.red, item.provincia, item.microred, item.distrito, item.cod_unico, item.eess, item.tdoc_pacien,
+                             item.doc_pacien, item.nombres_pacien, item.fnac_pacien, item.desc_etnia, item.genero, item.his_clinica,
+                             item.ficha_fam, item.financiador, item.pais, item.doc_personal, item.profesion, item.doc_regist,
+                             item.id_cond_eess, item.edad_reg, item.tedad, item.grupo_edad, item.codigo, item.tdiag, item.desc_item,
+                             item.vlab, item.id_corr_lab, item.peso, item.talla, item.hb, item.dec_otra_cond, item.dec_ccpp,
                              item.fur, item.solic_hb, item.result_hb, item.fregistro, item.fmodific])
 
         zip_filename = compress_file(response, nombre_archivo)
@@ -703,3 +701,11 @@ class PrintPlano(View):
             response['Content-Disposition'] = f'attachment; filename="{zip_filename}"'
             return response
 
+
+class R40View(TemplateView):
+    template_name = 'r40/index.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['provincia'] = Provincia.objects.all()
+        context['profesion'] = UPS.objects.all().order_by('nombre')
+        return context

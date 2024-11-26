@@ -45,10 +45,32 @@ new Vue({
         PrintPlano() {
             let prov = $("#provincia").val();
             let dist = $("#distrito").val();
-            let eess = $("#eess").val();
-            let ups = $("#ups").val();
-            url_ = window.location.origin + window.location.pathname + 'print/?prov='+prov+'&dist='+dist+'&eess='+eess+'&ups='+ups+'&anio='+this.anio+'&mes='+this.mes;
-            window.open(url_, '_parent');
+            if(prov == 0){
+                $.toast({
+                    heading: '¡Seleccione Provincia!',
+                    position: 'top-right',
+                    loaderBg:'#ff6849',
+                    icon: 'error',
+                    hideAfter: 3000,
+                    stack: 6
+                });
+            }
+            else if(dist == 0){
+                $.toast({
+                    heading: '¡Seleccione Distrito!',
+                    position: 'top-right',
+                    loaderBg:'#ff6849',
+                    icon: 'error',
+                    hideAfter: 3000,
+                    stack: 6
+                });
+            }
+            else{
+                let eess = $("#eess").val();
+                let ups = $("#ups").val();
+                url_ = window.location.origin + window.location.pathname + 'print/?prov='+prov+'&dist='+dist+'&eess='+eess+'&ups='+ups+'&anio='+this.anio+'&mes='+this.mes;
+                window.open(url_, '_parent');
+            }
         },
     },
 })

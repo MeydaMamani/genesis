@@ -41,6 +41,7 @@
                     <div class="mb-2 col-md-6 select2-sm">
                         <label class="text-start font-13 mb-1"><b>Seleccione un Provincia: </b></label>
                         <select class="form-select-sm w-100" name="provincia" id="provincia" @change="listDistritos">
+                            <option value="0">- Seleccione -</option>
                             {% for prov in provincia %}
                                 <option value="{{ prov.codigo }}">{{ prov.nombre }}</option>
                             {% endfor %}
@@ -49,8 +50,8 @@
                     <div class="mb-2 col-md-6 select2-sm">
                         <label class="text-start font-13 mb-1"><b>Seleccione un Distrito: </b></label>
                         <select class="form-control-sm w-100" name="distrito" id="distrito" @change="listEstab" v-select2="''">
+                            <option value="0">- Seleccione -</option>
                             <option v-for="item in listDistricts" :value="item.pk">[[ item.fields.nombre ]]</option>
-                            <option value="TODOS" selected>TODOS</option>
                         </select>
                     </div>
                     <div class="mb-2 col-md-6">
