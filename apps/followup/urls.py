@@ -16,4 +16,7 @@ urlpatterns = [
     path('plano/filterDist/', DistrictView.as_view(), name='filter_dist'),
     path('plano/filterEstab/', views.EESS.as_view(), name='filter_eess'),
     path('plano/print/', PrintPlano.as_view(), name='plano_print'),
+    path('plano/printR40Prof/', PrintR40Prof.as_view(), name='r40_prof'),
+    path('plano/printR40Doc/', PrintR40Doc.as_view(), name='r40_doc'),
+    path('plano/printCnv/', PrintCnv.as_view(), name='cnv'),
 ]

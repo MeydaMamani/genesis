@@ -12,79 +12,279 @@
 {% block content %}
 
 <div id="appPlano">
-    <div class="col-md-8 offset-md-2"><br>
-        <div class="card card-pricing">
-            <div class="card-header text-center pt-4 pb-5 position-relative" style="background: #6A6F8E;">
-                <div class="z-index-1 position-relative">
-                    <h3 class="text-white">Archivo Plano</h3>
+   <div class="card" style="background: #0000004d;">
+       <div class="card-body">
+            <div class="nav-wrapper position-relative end-0">
+                <ul class="nav nav-pills nav-fill p-1" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link mb-0 px-0 py-1 active" data-bs-toggle="tab" href="#nav-plano" role="tab" aria-controls="preview" aria-selected="true">
+                            <i class="ni ni-bullet-list-67 text-sm me-2"></i> Archivo Plano
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link mb-0 px-0 py-1" data-bs-toggle="tab" href="#nav-r40" role="tab" aria-controls="code" aria-selected="false">
+                            <i class="ni ni-laptop text-sm me-2"></i> R40
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link mb-0 px-0 py-1" data-bs-toggle="tab" href="#nav-cnv" role="tab" aria-controls="preview" aria-selected="true">
+                            <i class="ni ni-bullet-list-67 text-sm me-2"></i> CNV
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <div class="tab-content" id="nav-tabContent">
+                <div class="tab-pane fade show active" id="nav-plano" role="tabpanel" aria-labelledby="nav-plano-tab" tabindex="0">
+                    <div class="col-md-8 offset-md-2"><br>
+                        <div class="card card-pricing">
+                            <div class="card-header text-center pt-4 pb-5 position-relative" style="background: #6A6F8E;">
+                                <div class="z-index-1 position-relative">
+                                    <h3 class="text-white">Archivo Plano</h3>
+                                </div>
+                            </div>
+                            <div class="position-relative mt-n5" style="height: 40px;">
+                                <div class="position-absolute w-100">
+                                    <svg class="waves waves-sm" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 40" preserveAspectRatio="none" shape-rendering="auto">
+                                    <defs>
+                                        <path id="card-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"></path>
+                                    </defs>
+                                    <g class="moving-waves">
+                                        <use xlink:href="#card-wave" x="48" y="-1" fill="rgba(255,255,255,0.30"></use>
+                                        <use xlink:href="#card-wave" x="48" y="3" fill="rgba(255,255,255,0.35)"></use>
+                                        <use xlink:href="#card-wave" x="48" y="5" fill="rgba(255,255,255,0.25)"></use>
+                                        <use xlink:href="#card-wave" x="48" y="8" fill="rgba(255,255,255,0.20)"></use>
+                                        <use xlink:href="#card-wave" x="48" y="13" fill="rgba(255,255,255,0.15)"></use>
+                                        <use xlink:href="#card-wave" x="48" y="16" fill="rgba(255,255,255,0.99)"></use>
+                                    </g>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="card-body pt-3">
+                                <form method="GET" @submit.prevent="PrintPlano">
+                                    <div class="mb-2 col-md-6 select2-sm">
+                                        <label class="text-start font-13 mb-1"><b>Seleccione un Provincia: </b></label>
+                                        <select class="form-select-sm w-100" name="provincia" id="provincia" @change="listDistritos">
+                                            <option value="0">- Seleccione -</option>
+                                            {% for prov in provincia %}
+                                                <option value="{{ prov.codigo }}">{{ prov.nombre }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="mb-2 col-md-6 select2-sm">
+                                        <label class="text-start font-13 mb-1"><b>Seleccione un Distrito: </b></label>
+                                        <select class="form-control-sm" name="distrito" id="distrito" @change="listEstab" v-select2="''" style="width: 100%;">
+                                            <option value="0">- Seleccione -</option>
+                                            <option v-for="item in listDistricts" :value="item.pk">[[ item.fields.nombre ]]</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-2 col-md-6">
+                                        <label class="text-start font-13 mb-1"><b>Seleccione un EESS: </b></label>
+                                        <select class="form-control-sm w-100" name="eess" id="eess" v-select2="''" style="width: 100%;">
+                                            <option v-for="item in listEess" :value="item.pk">[[ item.fields.nombre ]]</option>
+                                            <option value="TODOS" selected>TODOS</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-2 col-md-6">
+                                        <label class="text-start font-13 mb-1"><b>Seleccione UPS: </b></label>
+                                        <select class="form-control-sm w-100" style="width: 100%;" name="ups" id="ups" v-select2="''" style="width: 100%;">
+                                            {% for des_ups in ups %}
+                                                <option value="{{ des_ups.codigo }}">{{ des_ups.nombre }}</option>
+                                            {% endfor %}
+                                            <option value="TODOS" selected>TODOS</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-2 col-md-6">
+                                        <label class="text-start font-13 mb-1"><b>Seleccione Año: </b></label>
+                                        <select class="form-control-sm w-100" name="anio" id="anio" v-model="anio" v-select2="''" style="width: 100%;"></select>
+                                    </div>
+                                    <div class="mb-2 col-md-6">
+                                        <label class="text-start font-13 mb-1"><b>Seleccione Mes: </b></label>
+                                        <select class="form-control-sm w-100" name="mes" id="mes" v-model="mes" v-select2="''" style="width: 100%;"></select>
+                                    </div>
+                                    <div class="col-md-12 mt-3 mb-2">
+                                        <button class="btn btn-secondary btn-block w-100 mb-0" type="submit"><i class="fa fa-print"></i> Descargar</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="nav-r40" role="tabpanel" aria-labelledby="nav-r40-tab" tabindex="0">
+                    <div class="col-md-8 offset-md-2"><br>
+                        <div class="card card-pricing">
+                            <div class="card-header text-center pt-3 pb-5 position-relative" style="background: #198754;">
+                                <div class="z-index-1 position-relative">
+                                    <h3 class="text-white">R40</h3>
+                                </div>
+                            </div>
+                            <div class="position-relative mt-n5" style="height: 40px;">
+                                <div class="position-absolute w-100">
+                                    <svg class="waves waves-sm" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 40" preserveAspectRatio="none" shape-rendering="auto">
+                                    <defs>
+                                        <path id="card-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"></path>
+                                    </defs>
+                                    <g class="moving-waves">
+                                        <use xlink:href="#card-wave" x="48" y="-1" fill="rgba(255,255,255,0.30"></use>
+                                        <use xlink:href="#card-wave" x="48" y="3" fill="rgba(255,255,255,0.35)"></use>
+                                        <use xlink:href="#card-wave" x="48" y="5" fill="rgba(255,255,255,0.25)"></use>
+                                        <use xlink:href="#card-wave" x="48" y="8" fill="rgba(255,255,255,0.20)"></use>
+                                        <use xlink:href="#card-wave" x="48" y="13" fill="rgba(255,255,255,0.15)"></use>
+                                        <use xlink:href="#card-wave" x="48" y="16" fill="rgba(255,255,255,0.99)"></use>
+                                    </g>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="card-body pt-2">
+                                <div class="row mb-3">
+                                    <div class="col-md-5">
+                                        <b>Seleccione un filtro:</b>
+                                    </div>
+                                    <div class="form-check form-check-inline col-md-2 p-0 text-start">
+                                        <input class="form-check-input" type="radio" name="myradio" id="myradio" value="r_r40">
+                                        <label class="form-check-label" for="myradio">Profesión</label>
+                                    </div>
+                                    <div class="form-check form-check-inline col-md-3 p-0 text-start">
+                                        <input class="form-check-input" type="radio" name="myradio" id="myradio" value="r_doc">
+                                        <label class="form-check-label" for="myradio">Documento</label>
+                                    </div>
+                                </div>
+                                <form method="GET" @submit.prevent="PrintR40Prof" class="r40" style="display: none;">
+                                    <div class="mb-2 col-md-6">
+                                        <label class="text-start font-13 mb-1"><b>Seleccione un Provincia: </b></label>
+                                        <select class="form-select-sm w-100" name="provincia1" id="provincia1" @change="listDistR40">
+                                            {% for prov in provincia %}
+                                                <option value="{{ prov.codigo }}">{{ prov.nombre }}</option>
+                                            {% endfor %}
+                                            <option value="TODOS" selected>TODOS</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-2 col-md-6">
+                                        <label class="text-start font-13 mb-1"><b>Seleccione un Distrito: </b></label>
+                                        <select class="form-select-sm w-100" name="distrito1" id="distrito1" @change="listEstabR40" v-select2="''" style="width: 100%;">
+                                            <option v-for="item in listDistr40" :value="item.pk">[[ item.fields.nombre ]]</option>
+                                            <option value="TODOS" selected>TODOS</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-2 col-md-6">
+                                        <label class="text-start font-13 mb-1"><b>Seleccione un EESS: </b></label>
+                                        <select class="form-select-sm w-100" name="eess1" id="eess1" v-select2="''" style="width: 100%;">
+                                            <option v-for="item in listeessr40" :value="item.pk">[[ item.fields.nombre ]]</option>
+                                            <option value="TODOS" selected>TODOS</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-2 col-md-6">
+                                        <label class="text-start font-13 mb-1"><b>Seleccione Año: </b></label>
+                                        <select class="form-select-sm w-100" name="anio1" id="anio1" v-model="anio1" v-select2="''" style="width: 100%;"></select>
+                                    </div>
+                                    <div class="mb-2 col-md-6">
+                                        <label class="text-start font-13 mb-1"><b>Seleccione Mes: </b></label>
+                                        <select class="form-select-sm w-100" name="mes1" id="mes1" v-model="mes1" v-select2="''" style="width: 100%;"></select>
+                                    </div>
+                                    <div class="mb-2 col-md-6">
+                                        <label class="text-start font-13 mb-1"><b>Seleccione Profesion: </b></label>
+                                        <select class="form-select-sm w-100" style="width: 100%;" name="prof" id="prof" v-select2="''">
+                                            {% for prof in profesion %}
+                                                <option value="{{ prof.codigo }}">{{ prof.nombre }}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                    <div class="col-md-12 mt-3 mb-2">
+                                        <button class="btn btn-dark btn-block w-100 mb-0" type="submit" style="background: #198754;"><i class="fa fa-print"></i> Descargar</button>
+                                    </div>
+                                </form>
+                                <form method="GET" @submit.prevent="PrintR40Doc" class="r40_doc" style="display: none;">
+                                    <div class="col-md-6 text-mobile">
+                                        <label class="text-start font-13 mb-2"><b>Seleccione Año Inicio: </b></label>
+                                        <select class="form-select-sm w-100" name="anioIni" id="anioIni" v-model="anioIni"></select>
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        <label class="text-start font-13 mb-2"><b>Seleccione Mes Inicio: </b></label>
+                                        <select class="form-select-sm w-100" name="mesIni" id="mesIni" v-model="mesIni" v-select2="''" style="width: 100%;"></select>
+                                    </div>
+                                    <div class="col-md-6 text-mobile">
+                                        <label class="text-start font-13 mb-2"><b>Seleccione Año Fin: </b></label>
+                                        <select class="form-select-sm w-100" name="anioFin" id="anioFin" v-model="anioFin"></select>
+                                    </div>
+                                    <div class="col-md-6 mb-2">
+                                        <label class="text-start font-13 mb-2"><b>Seleccione Mes Fin: </b></label>
+                                        <select class="form-select-sm w-100" name="mesFin" id="mesFin" v-model="mesFin" v-select2="''" style="width: 100%;"></select>
+                                    </div>
+                                    <div class="col-md-6 text-mobile">
+                                        <label class="text-start font-13 mb-2"><b>Ingrese Documento: </b></label>
+                                        <input type="number" pattern="[0-9]+" name="dni" id="dni" class="form-control" placeholder="Ingrese su dni...">
+                                    </div>
+                                    <div class="col-md-12 mt-3 mb-2">
+                                        <button class="btn btn-dark btn-block w-100 mb-0" type="submit" style="background: #198754;"><i class="fa fa-print"></i> Descargar</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="nav-cnv" role="tabpanel" aria-labelledby="nav-cnv-tab" tabindex="0">
+                    <div class="col-md-8 offset-md-2"><br>
+                        <div class="card card-pricing">
+                            <div class="card-header text-center pt-4 pb-5 position-relative" style="background: #E3D35D;">
+                                <div class="z-index-1 position-relative">
+                                    <h3 class="text-white">CNV</h3>
+                                </div>
+                            </div>
+                            <div class="position-relative mt-n5" style="height: 40px;">
+                                <div class="position-absolute w-100">
+                                    <svg class="waves waves-sm" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 40" preserveAspectRatio="none" shape-rendering="auto">
+                                    <defs>
+                                        <path id="card-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"></path>
+                                    </defs>
+                                    <g class="moving-waves">
+                                        <use xlink:href="#card-wave" x="48" y="-1" fill="rgba(255,255,255,0.30"></use>
+                                        <use xlink:href="#card-wave" x="48" y="3" fill="rgba(255,255,255,0.35)"></use>
+                                        <use xlink:href="#card-wave" x="48" y="5" fill="rgba(255,255,255,0.25)"></use>
+                                        <use xlink:href="#card-wave" x="48" y="8" fill="rgba(255,255,255,0.20)"></use>
+                                        <use xlink:href="#card-wave" x="48" y="13" fill="rgba(255,255,255,0.15)"></use>
+                                        <use xlink:href="#card-wave" x="48" y="16" fill="rgba(255,255,255,0.99)"></use>
+                                    </g>
+                                    </svg>
+                                </div>
+                            </div>
+                            <div class="card-body pt-3">
+                                <form method="GET" @submit.prevent="PrintCnv">
+                                    <div class="mb-2 col-md-6 select2-sm">
+                                        <label class="text-start font-13 mb-1"><b>Seleccione un Provincia: </b></label>
+                                        <select class="form-select-sm w-100" name="provincia2" id="provincia2" @change="listDistritos">
+                                            <option value="0">- Seleccione -</option>
+                                            {% for prov in provincia %}
+                                                <option value="{{ prov.codigo }}">{{ prov.nombre }}</option>
+                                            {% endfor %}
+                                            <option value="TODOS" selected>TODOS</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-2 col-md-6 select2-sm">
+                                        <label class="text-start font-13 mb-1"><b>Seleccione un Distrito: </b></label>
+                                        <select class="form-control-sm w-100" name="distrito2" id="distrito2" v-select2="''" style="width: 100%;">
+                                            <option value="0">- Seleccione -</option>
+                                            <option v-for="item in listDistricts" :value="item.pk">[[ item.fields.nombre ]]</option>
+                                            <option value="TODOS" selected>TODOS</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-2 col-md-6">
+                                        <label class="text-start font-13 mb-1"><b>Seleccione Año: </b></label>
+                                        <select class="form-control-sm w-100" name="anio2" id="anio2" v-model="anio2" v-select2="''" style="width: 100%;"></select>
+                                    </div>
+                                    <div class="mb-2 col-md-6">
+                                        <label class="text-start font-13 mb-1"><b>Seleccione Mes: </b></label>
+                                        <select class="form-control-sm w-100" name="mes2" id="mes2" v-model="mes2" v-select2="''" style="width: 100%;"></select>
+                                    </div>
+                                    <div class="col-md-12 mt-3 mb-2">
+                                        <button class="btn btn-dark btn-block w-100 mb-0" style="background: #E3D35D;" type="submit"><i class="fa fa-print"></i> Descargar</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="position-relative mt-n5" style="height: 40px;">
-                <div class="position-absolute w-100">
-                    <svg class="waves waves-sm" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 40" preserveAspectRatio="none" shape-rendering="auto">
-                    <defs>
-                        <path id="card-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z"></path>
-                    </defs>
-                    <g class="moving-waves">
-                        <use xlink:href="#card-wave" x="48" y="-1" fill="rgba(255,255,255,0.30"></use>
-                        <use xlink:href="#card-wave" x="48" y="3" fill="rgba(255,255,255,0.35)"></use>
-                        <use xlink:href="#card-wave" x="48" y="5" fill="rgba(255,255,255,0.25)"></use>
-                        <use xlink:href="#card-wave" x="48" y="8" fill="rgba(255,255,255,0.20)"></use>
-                        <use xlink:href="#card-wave" x="48" y="13" fill="rgba(255,255,255,0.15)"></use>
-                        <use xlink:href="#card-wave" x="48" y="16" fill="rgba(255,255,255,0.99)"></use>
-                    </g>
-                    </svg>
-                </div>
-            </div>
-            <div class="card-body">
-                <form method="GET" @submit.prevent="PrintPlano">
-                    <div class="mb-2 col-md-6 select2-sm">
-                        <label class="text-start font-13 mb-1"><b>Seleccione un Provincia: </b></label>
-                        <select class="form-select-sm w-100" name="provincia" id="provincia" @change="listDistritos">
-                            <option value="0">- Seleccione -</option>
-                            {% for prov in provincia %}
-                                <option value="{{ prov.codigo }}">{{ prov.nombre }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="mb-2 col-md-6 select2-sm">
-                        <label class="text-start font-13 mb-1"><b>Seleccione un Distrito: </b></label>
-                        <select class="form-control-sm w-100" name="distrito" id="distrito" @change="listEstab" v-select2="''">
-                            <option value="0">- Seleccione -</option>
-                            <option v-for="item in listDistricts" :value="item.pk">[[ item.fields.nombre ]]</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 col-md-6">
-                        <label class="text-start font-13 mb-1"><b>Seleccione un EESS: </b></label>
-                        <select class="form-control-sm w-100" name="eess" id="eess" v-select2="''">
-                            <option v-for="item in listEess" :value="item.pk">[[ item.fields.nombre ]]</option>
-                            <option value="TODOS" selected>TODOS</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 col-md-6">
-                        <label class="text-start font-13 mb-1"><b>Seleccione UPS: </b></label>
-                        <select class="form-control-sm w-100" style="width: 100%;" name="ups" id="ups" v-select2="''">
-                            {% for des_ups in ups %}
-                                <option value="{{ des_ups.codigo }}">{{ des_ups.nombre }}</option>
-                            {% endfor %}
-                            <option value="TODOS" selected>TODOS</option>
-                        </select>
-                    </div>
-                    <div class="mb-2 col-md-6">
-                        <label class="text-start font-13 mb-1"><b>Seleccione Año: </b></label>
-                        <select class="form-control-sm w-100" name="anio" id="anio" v-model="anio" v-select2="''"></select>
-                    </div>
-                    <div class="mb-2 col-md-6">
-                        <label class="text-start font-13 mb-1"><b>Seleccione Mes: </b></label>
-                        <select class="form-control-sm w-100" name="mes" id="mes" v-model="mes" v-select2="''"></select>
-                    </div>
-                    <div class="col-md-12 mt-3 mb-2">
-                        <button class="btn btn-secondary btn-block w-100 mb-0" type="submit"><i class="fa fa-print"></i> Descargar</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+       </div>
+   </div>
 </div>
 
 {% endblock content %}
@@ -92,5 +292,6 @@
 {% block scripts %}
 
 <script src="{% static 'js/vue/plano.js' %}"></script>
+<script src="{% static 'js/js/plano.js' %}"></script>
 
 {% endblock scripts %}
