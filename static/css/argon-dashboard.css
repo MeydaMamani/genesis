@@ -4609,8 +4609,9 @@ fieldset:disabled .btn {
 
 .nav-pills .nav-link.active,
 .nav-pills .show>.nav-link {
-  color: var(--bs-nav-pills-link-active-color);
-  background-color: var(--bs-nav-pills-link-active-bg);
+  color: var(--bs-nav-pills-link-active-color) !important;
+  background-color: var(--bs-nav-pills-link-active-bg) !important;
+  box-shadow: 0 0 0 0.2rem rgb(174 174 174 / 25%) !important;
 }
 
 .nav-fill>.nav-link,
