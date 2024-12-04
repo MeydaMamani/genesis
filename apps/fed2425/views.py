@@ -25,7 +25,7 @@ class MC01View(TemplateView):
     template_name = 'pregnant/MC-01.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['provincia'] = Provincia.objects.all()
+        context['provincia'] = Provincia.objects.exclude(codigo__in=['00'])
         return context
 
 
@@ -33,7 +33,7 @@ class MC02View(TemplateView):
     template_name = 'child/MC-02.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['provincia'] = Provincia.objects.all()
+        context['provincia'] = Provincia.objects.exclude(codigo__in=['00'])
         return context
 
 
@@ -41,7 +41,7 @@ class MC03View(TemplateView):
     template_name = 'child/MC-03.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['provincia'] = Provincia.objects.all()
+        context['provincia'] = Provincia.objects.exclude(codigo__in=['00'])
         return context
 
 
@@ -81,7 +81,6 @@ class ListMC03(View):
             dataNom = json.loads(serializers.serialize('json', dataNom, indent=2, use_natural_foreign_keys=True))
 
         elif request.POST['provincia'] != 'TODOS' and request.POST['distrito'] != 'TODOS':
-            print(request.POST['distrito'])
             total = mc_03.objects.filter(anio=request.POST['anio'], mes=request.POST['mes'], cod_dist=request.POST['distrito']).aggregate(total=Sum('den'))['total']
             cumplen = mc_03.objects.filter(anio=request.POST['anio'], mes=request.POST['mes'], cod_dist=request.POST['distrito']).aggregate(cumplen=Sum('num'))['cumplen']
             dataTotal = { 'total': total if total is not None else 0, 'cumple': cumplen, 'avance': round((cumplen/total)*100, 1) if (total != 0) and (total is not None) else 0 }
@@ -327,7 +326,7 @@ class SI01View(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['sector'] = Sector.objects.all()
-        context['provincia'] = Provincia.objects.all()
+        context['provincia'] = Provincia.objects.exclude(codigo__in=['00'])
         return context
 
 
@@ -628,7 +627,7 @@ class SI0201View(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['sector'] = Sector.objects.all()
-        context['provincia'] = Provincia.objects.all()
+        context['provincia'] = Provincia.objects.exclude(codigo__in=['00'])
         return context
 
 
@@ -1153,7 +1152,7 @@ class SI0202View(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['sector'] = Sector.objects.all()
-        context['provincia'] = Provincia.objects.all()
+        context['provincia'] = Provincia.objects.exclude(codigo__in=['00'])
         return context
 
 
@@ -1544,7 +1543,7 @@ class SI0203View(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['sector'] = Sector.objects.all()
-        context['provincia'] = Provincia.objects.all()
+        context['provincia'] = Provincia.objects.exclude(codigo__in=['00'])
         return context
 
 
@@ -1917,7 +1916,7 @@ class SI0401View(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['sector'] = Sector.objects.all()
-        context['provincia'] = Provincia.objects.all()
+        context['provincia'] = Provincia.objects.exclude(codigo__in=['00'])
         return context
 
 
@@ -2199,7 +2198,7 @@ class VII0101View(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['sector'] = Sector.objects.all()
-        context['provincia'] = Provincia.objects.all()
+        context['provincia'] = Provincia.objects.exclude(codigo__in=['00'])
         return context
 
 
@@ -2563,7 +2562,7 @@ class VI0101View(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['sector'] = Sector.objects.all()
-        context['provincia'] = Provincia.objects.all()
+        context['provincia'] = Provincia.objects.exclude(codigo__in=['00'])
         return context
 
 
@@ -2855,7 +2854,7 @@ class VI0102View(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['sector'] = Sector.objects.all()
-        context['provincia'] = Provincia.objects.all()
+        context['provincia'] = Provincia.objects.objects.exclude(codigo__in=['00'])
         return context
 
 

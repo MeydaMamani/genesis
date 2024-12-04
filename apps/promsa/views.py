@@ -25,7 +25,7 @@ class PromsaView(TemplateView):
     template_name = 'index.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['provincia'] = Provincia.objects.all()
+        context['provincia'] = Provincia.objects.exclude(codigo__in=['00'])
         return context
 
 

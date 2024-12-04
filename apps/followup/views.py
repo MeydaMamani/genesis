@@ -32,7 +32,7 @@ class PadronView(TemplateView):
     template_name = 'pn/index.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['provincia'] = Provincia.objects.all()
+        context['provincia'] = Provincia.objects.exclude(codigo__in=['00'])
         return context
 
 
@@ -629,7 +629,7 @@ class PlanoView(TemplateView):
     template_name = 'plane/index.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['provincia'] = Provincia.objects.all()
+        context['provincia'] = Provincia.objects.exclude(codigo__in=['00'])
         context['ups'] = UPS.objects.all().order_by('nombre')
         context['profesion'] = Profesion.objects.all().order_by('nombre')
         return context
@@ -708,7 +708,7 @@ class R40View(TemplateView):
     template_name = 'r40/index.html'
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['provincia'] = Provincia.objects.all()
+        context['provincia'] = Provincia.objects.exclude(codigo__in=['00'])
         context['profesion'] = UPS.objects.all().order_by('nombre')
         return context
 
