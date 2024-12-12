@@ -1317,7 +1317,7 @@ class PrintCnv(View):
                 dataNom = cnv.objects.filter(cod_dep=27, periodo=str(request.GET['anio']+mes))
             elif request.GET['prov'] != 'TODOS' and request.GET['dist'] == 'TODOS':
                 dataNom = cnv.objects.filter(cod_dep=27, periodo=str(request.GET['anio']+mes), cod_prov=request.GET['prov'])
-            elif request.GET['prov'] != 'TODOS' and request.GET['dist'] != 'TODOS' and request.GET['eess'] == 'TODOS':
+            elif request.GET['prov'] != 'TODOS' and request.GET['dist'] != 'TODOS':
                 dataNom = cnv.objects.filter(cod_dep=27, periodo=str(request.GET['anio']+mes), cod_dist=request.GET['dist'])
 
         dataNom = json.loads(serializers.serialize('json', dataNom, indent=2, use_natural_foreign_keys=True))
