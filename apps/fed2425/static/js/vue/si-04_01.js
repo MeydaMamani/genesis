@@ -21,7 +21,7 @@ new Vue({
         listYears: function(){
             let fec = new Date();
             var selectYear = document.getElementById("anio");
-            for(var i = 2024; i<=fec.getFullYear(); i++)selectYear.options.add(new Option(i,i));
+            for(var i = 2024; i<=fec.getFullYear()+1; i++)selectYear.options.add(new Option(i,i));
             var selectMonth = document.getElementById("mes");
             for(var i = 1; i<=12; i++)selectMonth.options.add(new Option(new Date(i.toString()).toLocaleString('default', { month: 'long' }).toUpperCase(),i));
         },

@@ -19,7 +19,7 @@ new Vue({
         listYears: function(){
             let fec = new Date();
             var selectYear = document.getElementById("anio");
-            for(var i = 2024; i<=fec.getFullYear(); i++)selectYear.options.add(new Option(i,i));
+            for(var i = 2024; i<=fec.getFullYear()+1; i++)selectYear.options.add(new Option(i,i));
             var selectMonth = document.getElementById("mes");
             for(var i = 1; i<=12; i++)selectMonth.options.add(new Option(new Date(i.toString()).toLocaleString('default', { month: 'long' }).toUpperCase(),i));
         },
@@ -28,7 +28,6 @@ new Vue({
             axios.get('filterDist/', { params: { id: e.target.value } })
             .then(respuesta => {
                 this.listDistricts = respuesta.data
-                console.log(this.listDistricts);
             });
         },
 
@@ -56,7 +55,6 @@ new Vue({
                 data: formData
             }).then(response => {
                 self.lists = response.data
-                console.log(self.lists[2]);
                 self.total = response.data[0].total
                 self.cumple = response.data[0].cumple
                 self.nocumple = response.data[0].total - response.data[0].cumple

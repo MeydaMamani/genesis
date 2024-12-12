@@ -2854,7 +2854,7 @@ class VI0102View(TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['sector'] = Sector.objects.all()
-        context['provincia'] = Provincia.objects.objects.exclude(codigo__in=['00'])
+        context['provincia'] = Provincia.objects.exclude(codigo__in=['00'])
         return context
 
 
