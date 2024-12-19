@@ -2405,13 +2405,13 @@ class PrintVII0101(View):
         ws['H7'].alignment = Alignment(horizontal="center", vertical="center")
         ws['H7'].fill = PatternFill(start_color='CBEFF5', end_color='CBEFF5', fill_type='solid')
 
-        ws['I7'] = 'Dx 3m'
+        ws['I7'] = 'Ult. Fecha Aten. 3m'
         ws['I7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
         ws['I7'].font = Font(name='Aptos Narrow', size=10, bold=True)
         ws['I7'].alignment = Alignment(horizontal="center", vertical="center")
         ws['I7'].fill = PatternFill(start_color='DCCBF5', end_color='DCCBF5', fill_type='solid')
 
-        ws['J7'] = 'Dx 6m'
+        ws['J7'] = 'Ult. Fecha Aten. 6m'
         ws['J7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
         ws['J7'].font = Font(name='Aptos Narrow', size=10, bold=True)
         ws['J7'].alignment = Alignment(horizontal="center", vertical="center")
