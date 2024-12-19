@@ -22,6 +22,11 @@
     <link rel="stylesheet" href="{% static 'css/style_footable.css' %}">
     <link rel="stylesheet" href="{% static 'css/select2.min.css' %}">
     <link rel="stylesheet" href="{% static 'plugins/toast-master/css/jquery.toast.css' %}">
+    <!-- link chartjs -->
+	<link rel="stylesheet" href="{% static 'plugins/chartist-js/chartist.min.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/chartist-js/chartist-init.css' %}">
+    <link rel="stylesheet" href="{% static 'plugins/chartist-js/chartist-plugin-tooltip.min.js' %}">
+    <link rel="stylesheet" href="{% static 'plugins/chartist-js/css-chart.css' %}">
 
     {% block styles %}
 
@@ -50,6 +55,7 @@
                             <li><a href="{% url 'followup:sello' %}">Sello Municipal</a></li>
                             <li><a href="{% url 'boards:desa' %}">Desa</a></li>
                             <li><a href="{% url 'boards:programs' %}">Programas</a></li>
+                            <li><a href="{% url 'boards:cobertura' %}">Coberturas</a></li>
                         </ul>
                     </li>
                     <li><a><i class="fa fa-desktop"></i> Fed <span class="fa fa-chevron-down"></span></a>
@@ -215,10 +221,10 @@
     <script src="{% static 'js/select2.full.min.js' %}"></script>
     <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
     <script src="{% static 'js/custom.min.js' %}"></script>
-    <script src="{% static 'js/chart.min.js' %}"></script>
+    <!-- <script src="{% static 'js/chart.min.js' %}"></script> -->
     <script src="{% static 'js/vue.js' %}"></script>
     <!-- <script src="{% static 'js/bootstrap-progressbar.min.js' %}"></script> -->
-    <script src="{% static 'js/jquery.easypiechart.min.js' %}"></script>
+    <!-- <script src="{% static 'js/jquery.easypiechart.min.js' %}"></script> -->
     <script src="{% static 'js/sweetalert.min.js' %}"></script>
     <script src="{% static 'js/gauge.min.js' %}"></script>
     <script src="{% static 'js/popper.min.js' %}"></script>
@@ -231,6 +237,10 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <script src="{% static 'js/vue/profile.js' %}"></script>
     <!-- <script src="{% static 'js/argon-dashboard.min.js' %}"></script> -->
+    <script src="{% static 'plugins/chartist-js/jquery.sparkline.min.js' %}"></script>
+    <script src="{% static 'plugins/chart/chart.js' %}"></script>
+    <script src="{% static 'plugins/chart/Chart.min.js' %}"></script>
+    <script src="{% static 'plugins/chart/chartjs-plugin-datalabels.min.js' %}"></script>
     <script>
         Vue.directive('select2', {
             inserted: function (elem, fieldName) {
