@@ -184,7 +184,10 @@
     overflow: auto;
 }
 
-
 .bg-gradient-rose{
     background: linear-gradient(60deg,#ec407a,#d81b60);
+}
+
+.bg-gradient-purple{
+    background: linear-gradient(60deg, #a57ee0, #603a80);
 }

@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% load static  %}
+
+{% block title %}
+	TABLERO FED
+{% endblock title %}
+
+{% block styles %}
+
+{% endblock styles %}
+
+{% block content %}
+
+<div id="tablerofed">
+    <div class="col-md-12 text-center mb-4">
+        <h3 class="font-weight-bold text-white m-0">Tablero Indicadores Fed 2024 - 2025</h3>
+    </div>
+    <div class="col-md-12 mt-2 mb-3">
+        <div class="card shadow-lg" style="border: 2px solid #6e24af;">
+            <div class="card-header card-header-text pb-0 pt-3">
+                <div class="col-md-7">
+                    <div class="card-text bg-gradient-purple px-4 shadow">
+                        <h4 class="card-title text-white font-weight-light m-0">Avance Mensual Niño</h4>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="row">
+                        <form method="GET" @submit.prevent="searchKids">
+                            <div class="col-md-5 p-0">
+                                <select class="form-select-sm w-100" name="provincia" id="provincia" @change="filterDistKids">
+                                    {% for prov in provincia %}
+                                        <option value="{{ prov.codigo }}">{{ prov.nombre }}</option>
+                                    {% endfor %}
+                                    <option value="TODOS" selected>TODOS</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <select class="form-control-sm" name="distrito" id="distrito" v-select2="''" style="width: 100%;">
+                                    <option v-for="item in listDistrictKids" :value="item.pk">[[ item.fields.nombre ]]</option>
+                                    <option value="TODOS" selected>TODOS</option>
+                                </select>
+                            </div>
+                            <div class="col-md-1 p-0">
+                                <button class="btn btn-secondary btn-block w-100 p-1 mb-3" id="searchKids" type="submit"><i class="fa fa-search"></i> </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body pt-0 text-center">
+                <div style="height: 260px; padding: 0;" class="chartChild"></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 mt-4 mb-3">
+        <div class="card shadow-lg" style="border: 2px solid #d81b60;">
+            <div class="card-header card-header-text pb-0 pt-3">
+                <div class="col-md-7">
+                    <div class="card-text bg-gradient-rose px-4 shadow">
+                        <h4 class="card-title text-white font-weight-light m-0">Avance Mensual Gestante</h4>
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="row">
+                        <form method="GET" @submit.prevent="searchPregnant">
+                            <div class="col-md-5 p-0">
+                                <select class="form-select-sm w-100" name="provincia1" id="provincia1" @change="filterDistPreg">
+                                    <option value="0">- Seleccione -</option>
+                                    {% for prov in provincia %}
+                                        <option value="{{ prov.codigo }}">{{ prov.nombre }}</option>
+                                    {% endfor %}
+                                    <option value="TODOS" selected>TODOS</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <select class="form-control-sm" name="distrito1" id="distrito1" v-select2="''" style="width: 100%;">
+                                    <option value="0">- Seleccione -</option>
+                                    <option v-for="item in listDistrictPreg" :value="item.pk">[[ item.fields.nombre ]]</option>
+                                    <option value="TODOS" selected>TODOS</option>
+                                </select>
+                            </div>
+                            <div class="col-md-1 p-0">
+                                <button class="btn btn-secondary btn-block w-100 p-1 mb-3" id="searchPreg" type="submit"><i class="fa fa-search"></i> </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body pt-0 text-center">
+                <div style="height: 260px; padding: 0;" class="chartGest"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block scripts %}
+
+<script src="{% static 'js/vue/fed.js' %}"></script>
+<script src="{% static 'js/js/fed.js' %}"></script>
+
+{% endblock scripts %}
