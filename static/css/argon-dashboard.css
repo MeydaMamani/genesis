@@ -22536,7 +22536,7 @@ hr.horizontal.gray-light {
   overflow-y: auto;
   padding: 0;
   box-shadow: none;
-  z-index: 9999;
+  z-index: 99;
 }
 
 .navbar-vertical.navbar-expand-xs .navbar-collapse {
