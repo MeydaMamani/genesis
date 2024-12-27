@@ -1,0 +1,291 @@
+{% extends "base.html" %}
+{% load static  %}
+
+{% block title %}
+FED SI-03
+{% endblock title %}
+
+{% block styles %}
+
+{% endblock styles %}
+
+{% block content %}
+
+<div id="app_si03">
+    <div class="col-md-12 mb-3">
+        <h6 class="font-weight-bolder text-white mb-0">SI-03: Niñas y niños menores de 12M de edad del departamento, que cuentan con controles CRED según edad. - <span class="nameMonthYear" style="color: black;"></span></h6>
+    </div><br>
+    <div class="row">
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+            <div class="card">
+                <div class="card-body p-3">
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="numbers">
+                                <p class="text-sm mb-0 text-capitalize font-weight-bold">Total</p>
+                                <h5 class="font-weight-bolder mb-0">[[ total ]]</h5>
+                            </div>
+                        </div>
+                        <div class="col-4 text-end">
+                            <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
+                                <i class="ni ni-single-02 text-lg opacity-10" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+            <div class="card">
+                <div class="card-body p-3">
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="numbers">
+                                <p class="text-sm mb-0 text-capitalize text-success font-weight-bold">Cumplen</p>
+                                <h5 class="font-weight-bolder mb-0">[[ cumple ]]</h5>
+                            </div>
+                        </div>
+                        <div class="col-4 text-end">
+                            <div class="icon icon-shape bg-gradient-success shadow text-center border-radius-md">
+                                <i class="ni ni-like-2 text-lg opacity-10" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+            <div class="card">
+                <div class="card-body p-3">
+                    <div class="row">
+                        <div class="col-8">
+                            <div class="numbers">
+                                <p class="text-sm mb-0 text-capitalize text-danger font-weight-bold">No Cumplen</p>
+                                <h5 class="font-weight-bolder mb-0">[[ nocumple ]]</h5>
+                            </div>
+                        </div>
+                        <div class="col-4 text-end">
+                            <div class="icon icon-shape bg-gradient-danger shadow text-center border-radius-md">
+                                <i class="fa fa-close opacity-10" aria-hidden="true"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+            <div class="col-md-6 p-0">
+                <button type="button" class="btn btn-success w-100 btn-sm" @click="PrintExcel"><i class="mdi mdi-format-list-bulleted"></i> Descargar</button>
+            </div>
+            <!-- <div class="col-md-6">
+                <button type="button" class="btn btn-danger w-100 btn-sm" data-bs-toggle="modal" data-bs-target="#modalficha"><i class="mdi mdi-format-list-bulleted"></i> Ficha</button>
+            </div> -->
+            <div class="col-md-6">
+                <a type="button" class="btn btn-secondary w-100 px-0 btn-sm" href="{% url 'dashboard:home' %}"><i class="mdi mdi-arrow-left-bold"></i> Regresar</a>
+            </div>
+            <div class="col-md-6 p-0">
+                <button class="btn btn-dark btn-sm w-100 px-0" data-bs-toggle="modal" data-bs-target="#modalResumDist"><i class="mdi mdi-checkbox-multiple-blank"></i> Resumen</button>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-5 mb-2">
+            <div class="card">
+                <div class="card-body p-3 pt-2 pb-2">
+                    <form method="POST" @submit.prevent="sendFormat">
+                        {% csrf_token %}
+                        <div class="mb-2 col-md-6 p-0 select2-sm">
+                            <select class="form-select-sm w-100" name="provincia" id="provincia" @change="listDistritos" v-select2="''">
+                                {% for prov in provincia %}
+                                    <option value="{{ prov.codigo }}">{{ prov.nombre }}</option>
+                                {% endfor %}
+                                <option value="TODOS" selected>TODOS</option>
+                            </select>
+                        </div>
+                        <div class="mb-2 col-md-6 pr-0 select2-sm">
+                            <select class="form-control-sm w-100" name="distrito" id="distrito" v-select2="''">
+                                <option v-for="item in listDistricts" :value="item.pk">[[ item.fields.nombre ]]</option>
+                                <option value="TODOS" selected>TODOS</option>
+                            </select>
+                        </div>
+                        <div class="mb-2 col-md-6 p-0 select2-sm">
+                            <select class="form-control-sm w-100" name="anio" id="anio" v-model="anio" v-select2="''">
+                                <option value="0">- Seleccione Anio -</option>
+                            </select>
+                        </div>
+                        <div class="mb-2 col-md-6 pr-0 select2-sm">
+                            <select class="form-control-sm w-100" name="mes" id="mes" v-model="mes" v-select2="''">
+                                <option value="0">- Seleccione Mes -</option>
+                            </select>
+                        </div>
+                        <div class="mb-2 col-md-12 p-0">
+                            <button class="btn btn-primary btn-block w-100 btn-sm mb-0 p-1 buscar" type="submit"><i class="fa fa-search"></i> Buscar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 mb-3 pl-0">
+            <div class="card shadow text-center">
+                <div class="card-body p-0">
+                    <span class="chart" data-percent="0"><span class="percent"></span></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5 p-0">
+            <div class="col-md-4 pl-0" v-for="data, key in lists[1]">
+                <div class="card shadow mb-2">
+                    <div class="card-body p-2">
+                        <div class="text-center align-items-center">
+                            <img :src="'/static/img/' + data.provincia + '.png'" width="80" alt="dac">
+                            <p class="text-xs font-weight-bold mt-2 mb-0" style="text-transform: lowercase;">[[ data.provincia ]]:</p>
+                            <h6 class="text-md mb-0">[[ parseFloat(data.avance).toFixed(1) ]]%</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 p-0">
+        <div class="card">
+            <div class="card-body p-2">
+                <div class="table-responsive" id="tableNominal">
+                    <table id="demo-foo-addrow" class="table table-hover" data-page-size="20" data-limit-navigation="10">
+                        <thead>
+                            <tr class="font-10 text-center">
+                                <th class="align-middle p-1">#</th>
+                                <th class="align-middle p-1">Provincia</th>
+                                <th class="align-middle p-1">Distrito</th>
+                                <th class="align-middle p-1">Ult. EESS His</th>
+                                <th class="align-middle p-1">Documento</th>
+                                <th class="align-middle p-1">Fecha Nacido</th>
+                                <!-- <th class="align-middle p-1">Seguro</th> -->
+                                <th class="align-middle p-1" style="background: #CBEFF5 !important;">Cred 1</th>
+                                <th class="align-middle p-1" style="background: #CBEFF5 !important;">Cred 2</th>
+                                <th class="align-middle p-1" style="background: #CBEFF5 !important;">Cred 3</th>
+                                <th class="align-middle p-1" style="background: #CBEFF5 !important;">Cred 4</th>
+                                <th class="align-middle p-1" style="background: #CBEFF5 !important;">Cred 5</th>
+                                <th class="align-middle p-1" style="background: #CBEFF5 !important;">Cred 6</th>
+                                <th class="align-middle p-1" style="background: #CBEFF5 !important;">Cred 7</th>
+                                <th class="align-middle p-1" style="background: #CBEFF5 !important;">Cred 8</th>
+                                <th class="align-middle p-1" style="background: #CBEFF5 !important;">Cred 9</th>
+                                <th class="align-middle p-1" style="background: #CBEFF5 !important;">Cred 10</th>
+                                <th class="align-middle p-1" style="background: #CBEFF5 !important;">Cred 11</th>
+                                <th class="align-middle p-1" style="background: #B3F5C2 !important">Cumple</th>
+                            </tr>
+                        </thead>
+                        <div class="float-right col-md-3 p-0">
+                            <div class="col-md-12 col-sm-12 form-group has-feedback pr-0">
+                                <input id="demo-input-search" class="form-control has-feedback-left" type="search" placeholder="Buscar...">
+                                <span class="glyphicon glyphicon-search form-control-feedback left mt-1" aria-hidden="true"></span>
+                            </div>
+                        </div>
+                        <tbody>
+                            <tr class="text-center font-9" v-for="item, key in lists[3]">
+                                <td class="align-middle p-1">[[ key+1 ]]</td>
+                                <td class="align-middle p-1">[[ item.fields.provincia ]]</td>
+                                <td class="align-middle p-1">[[ item.fields.distrito ]]</td>
+                                <td class="align-middle p-1">[[ item.fields.ult_eess ]]</td>
+                                <td class="align-middle p-1">[[ item.fields.documento ]]</td>
+                                <td class="align-middle p-1">[[ item.fields.fec_nac ]]</td>
+                                <!-- <td class="align-middle p-1">[[ item.fields.seguro ]]</td> -->
+                                <td class="align-middle p-1">[[ item.fields.cred1 ]]</td>
+                                <td class="align-middle p-1">[[ item.fields.cred2 ]]</td>
+                                <td class="align-middle p-1">[[ item.fields.cred3 ]]</td>
+                                <td class="align-middle p-1">[[ item.fields.cred4 ]]</td>
+                                <td class="align-middle p-1">[[ item.fields.cred5 ]]</td>
+                                <td class="align-middle p-1">[[ item.fields.cred6 ]]</td>
+                                <td class="align-middle p-1">[[ item.fields.cred7 ]]</td>
+                                <td class="align-middle p-1">[[ item.fields.cred8 ]]</td>
+                                <td class="align-middle p-1">[[ item.fields.cred9 ]]</td>
+                                <td class="align-middle p-1">[[ item.fields.cred10 ]]</td>
+                                <td class="align-middle p-1">[[ item.fields.cred11 ]]</td>
+                                <td class="align-middle p-0">
+                                    <template v-if="item.fields.num == '1'"><i class="fa fa-check text-success"></i></template>
+                                    <template v-else><i class="fa fa-remove text-danger"></i></template>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="6">
+                                    <div class="">
+                                        <ul class="pagination"></ul>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalficha" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myModalLabel2">Sintaxis</h5>
+                    <button type="button" class="btn-close text-dark d-flex align-items-center font-weight-bolder" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <img src="{% static 'img/fed/si0203.png' %}" alt="ficha tecnica" class="w-100">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="modalResumDist" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="myModalLabel2">Resumen por Distrito</h5>
+                    <button type="button" class="btn-close text-dark d-flex align-items-center font-weight-bolder" data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="table-responsive" id="tableResum">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr class="font-10 text-center" style="background: #e0eff5;">
+                                    <th class="align-middle p-1">#</th>
+                                    <th class="align-middle p-1">Distrito</th>
+                                    <th class="align-middle p-1">Den</th>
+                                    <th class="align-middle p-1">Num</th>
+                                    <th class="align-middle p-1">%</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr class="text-center font-9" v-for="item, key in lists[2]">
+                                    <td class="align-middle p-1">[[ key+1 ]]</td>
+                                    <td class="align-middle text-left p-1">[[ item.distrito ]]</td>
+                                    <td class="align-middle p-1">[[ item.denominador ]]</td>
+                                    <td class="align-middle p-1">[[ item.numerador ]]</td>
+                                    <td class="align-middle p-1 text-success d-flex" v-if="item.denominador == item.numerador"><div id="circleSuccess"></div>100%</td>
+                                    <td class="align-middle p-1 text-success d-flex" v-else-if="item.avance > 59"><div id="circleSuccess"></div>[[ parseFloat(item.avance).toFixed(1) ]]%</td>
+                                    <td class="align-middle p-1 text-danger d-flex" v-else-if="item.avance <= 49"><div id="circleDanger"></div>[[ parseFloat(item.avance).toFixed(1) ]]%</td>
+                                    <td class="align-middle p-1 text-warning d-flex" v-else-if="item.avance > 49 && item.avance <= 59"><div id="circleWarning"></div>[[ parseFloat(item.avance).toFixed(1) ]]%</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="fixed-plugin">
+        <a class="fixed-plugin-button text-white bg-dark position-fixed px-3 py-2 shadow" href="https://drive.google.com/uc?id=1-odyIXcvzvpfTdkav8WT2njjjsBkRZWg&export=download">
+            <i class="fa fa-download py-2"> </i>
+        </a>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block scripts %}
+
+<script src="{% static 'js/vue/si-03.js' %}"></script>
+<script src="{% static 'js/js/si-03.js' %}"></script>
+
+{% endblock scripts %}

@@ -10,7 +10,7 @@ from django.db.models.functions import Cast, Round
 import json
 from datetime import date, datetime
 
-from .models import mc_03, si_01, si_0202, si_0203, si_0401, vii_0101, vi_0101, vi_0102, si_0201_pr, si_0201_sn, si_0201_cont
+from .models import mc_03, si_01, si_0202, si_0203, si_0401, vii_0101, vi_0101, vi_0102, si_0201_pr, si_0201_sn, si_0201_cont, si_03
 from apps.main.models import Sector, Provincia, Distrito, Establecimiento
 
 # library excel
@@ -3155,6 +3155,300 @@ class PrintVI0102(View):
         contenido = "attachment; filename={0}".format(nombre_archivo)
         response["Content-Disposition"] = contenido
         ws.title = 'NOMINAL GEST. CON DX VIOLENCIA'
+        wb.save(response)
+        return response
+
+
+class SI03View(TemplateView):
+    template_name = 'child/SI-03.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['provincia'] = Provincia.objects.exclude(codigo__in=['00'])
+        return context
+
+
+class DistrictSI03View(View):
+    def get(self, request, *args, **kwargs):
+        dist = serializers.serialize('json', Distrito.objects.filter(prov_id=request.GET['id']), indent=2, use_natural_foreign_keys=True)
+        return HttpResponse(dist, content_type='application/json')
+
+
+class ListSI03(View):
+    def post(self, request, *args, **kwargs):
+        json_data4 = []
+        if request.POST['provincia'] == 'TODOS':
+            total = si_03.objects.filter(anio=request.POST['anio'], mes=request.POST['mes']).aggregate(total=Sum('den'))['total']
+            cumplen = si_03.objects.filter(anio=request.POST['anio'], mes=request.POST['mes']).aggregate(cumplen=Sum('num'))['cumplen']
+            dataTotal = { 'total': total if total is not None else 0, 'cumple': cumplen, 'avance': round((cumplen/total)*100, 1) if (total != 0) and (total is not None) else 0 }
+            dataProv = si_03.objects.filter(anio=request.POST['anio'], mes=request.POST['mes']).values('provincia').annotate(denominador=Sum('den'),
+                        numerador=Sum('num'), avance=(ExpressionWrapper( Cast(Sum('num'), FloatField()) / Cast(Sum('den'), FloatField()) * 100,
+                        output_field=FloatField()))).order_by('-avance', '-denominador', '-numerador')
+            dataDist = si_03.objects.filter(anio=request.POST['anio'], mes=request.POST['mes']).values('distrito').annotate(denominador=Sum('den'),
+                        numerador=Sum('num'), avance=(ExpressionWrapper( Cast(Sum('num'), FloatField()) / Cast(Sum('den'), FloatField()) * 100,
+                        output_field=FloatField()))).order_by('-avance', '-denominador', '-numerador')
+            dataNom = si_03.objects.filter(anio=request.POST['anio'], mes=request.POST['mes']).order_by('provincia', 'distrito')
+            dataNom = json.loads(serializers.serialize('json', dataNom, indent=2, use_natural_foreign_keys=True))
+
+        elif request.POST['provincia'] != 'TODOS' and request.POST['distrito'] == 'TODOS':
+            total = si_03.objects.filter(anio=request.POST['anio'], mes=request.POST['mes'], cod_prov=request.POST['provincia']).aggregate(total=Sum('den'))['total']
+            cumplen = si_03.objects.filter(anio=request.POST['anio'], mes=request.POST['mes'], cod_prov=request.POST['provincia']).aggregate(cumplen=Sum('num'))['cumplen']
+            dataTotal = { 'total': total if total is not None else 0, 'cumple': cumplen, 'avance': round((cumplen/total)*100, 1) if (total != 0) and (total is not None) else 0 }
+            dataProv = si_03.objects.filter(anio=request.POST['anio'], mes=request.POST['mes'], cod_prov=request.POST['provincia']).values('provincia').annotate(denominador=Sum('den'),
+                        numerador=Sum('num'), avance=(ExpressionWrapper( Cast(Sum('num'), FloatField()) / Cast(Sum('den'), FloatField()) * 100,
+                        output_field=FloatField()))).order_by('-avance', '-denominador', '-numerador')
+            dataDist = si_03.objects.filter(anio=request.POST['anio'], mes=request.POST['mes'], cod_prov=request.POST['provincia']).values('distrito').annotate(denominador=Sum('den'),
+                        numerador=Sum('num'), avance=(ExpressionWrapper( Cast(Sum('num'), FloatField()) / Cast(Sum('den'), FloatField()) * 100,
+                        output_field=FloatField()))).order_by('-avance', '-denominador', '-numerador')
+            dataNom = si_03.objects.filter(anio=request.POST['anio'], mes=request.POST['mes'], cod_prov=request.POST['provincia']).order_by('provincia', 'distrito')
+            dataNom = json.loads(serializers.serialize('json', dataNom, indent=2, use_natural_foreign_keys=True))
+
+        elif request.POST['provincia'] != 'TODOS' and request.POST['distrito'] != 'TODOS':
+            total = si_03.objects.filter(anio=request.POST['anio'], mes=request.POST['mes'], cod_dist=request.POST['distrito']).aggregate(total=Sum('den'))['total']
+            cumplen = si_03.objects.filter(anio=request.POST['anio'], mes=request.POST['mes'], cod_dist=request.POST['distrito']).aggregate(cumplen=Sum('num'))['cumplen']
+            dataTotal = { 'total': total if total is not None else 0, 'cumple': cumplen, 'avance': round((cumplen/total)*100, 1) if (total != 0) and (total is not None) else 0 }
+            dataProv = si_03.objects.filter(anio=request.POST['anio'], mes=request.POST['mes'], cod_dist=request.POST['distrito']).values('provincia').annotate(denominador=Sum('den'),
+                        numerador=Sum('num'), avance=(ExpressionWrapper( Cast(Sum('num'), FloatField()) / Cast(Sum('den'), FloatField()) * 100,
+                        output_field=FloatField()))).order_by('-avance', '-denominador', '-numerador')
+            dataDist = si_03.objects.filter(anio=request.POST['anio'], mes=request.POST['mes'], cod_dist=request.POST['distrito']).values('distrito').annotate(denominador=Sum('den'),
+                        numerador=Sum('num'), avance=(ExpressionWrapper( Cast(Sum('num'), FloatField()) / Cast(Sum('den'), FloatField()) * 100,
+                        output_field=FloatField()))).order_by('-avance', '-denominador', '-numerador')
+            dataNom = si_03.objects.filter(anio=request.POST['anio'], mes=request.POST['mes'], cod_dist=request.POST['distrito']).order_by('provincia', 'distrito')
+            dataNom = json.loads(serializers.serialize('json', dataNom, indent=2, use_natural_foreign_keys=True))
+
+        json_data4.append(dataTotal)
+        json_data4.append(list(dataProv))
+        json_data4.append(list(dataDist))
+        json_data4.append(dataNom)
+
+        return HttpResponse(json.dumps(json_data4), content_type='application/json')
+
+
+class PrintSI03(View):
+    def get(self, request, *args, **kwargs):
+        wb = Workbook()
+        ws = wb.active
+
+        locale.setlocale(locale.LC_ALL, "C")
+        nameMonth = date(1900, int(request.GET['mes']), 1).strftime('%B')
+
+        def set_border(self, ws, cell_range, types, colors):
+            thin = Side(border_style=types, color=colors)
+            for row in ws[cell_range]:
+                for cell in row:
+                    cell.border = Border(top=thin, left=thin, right=thin, bottom=thin)
+
+        set_border(self, ws, "A2:R2", "medium", "2F75B5")
+        set_border(self, ws, "A3:R3", "medium", "366092")
+        set_border(self, ws, "A5:R5", "medium", "D9D9D9")
+
+        img = Image('static/img/logoPrint.png')
+        ws.merge_cells('A2:A3')
+        ws.add_image(img, 'A2')
+
+        ws.row_dimensions[2].height = 23
+        ws.column_dimensions['A'].width = 6
+        ws.column_dimensions['B'].width = 24
+        ws.column_dimensions['C'].width = 38
+        ws.column_dimensions['D'].width = 35
+        ws.column_dimensions['E'].width = 11
+        ws.column_dimensions['F'].width = 12
+        ws.column_dimensions['G'].width = 11
+        ws.column_dimensions['H'].width = 11
+        ws.column_dimensions['I'].width = 11
+        ws.column_dimensions['J'].width = 11
+        ws.column_dimensions['K'].width = 11
+        ws.column_dimensions['L'].width = 11
+        ws.column_dimensions['M'].width = 11
+        ws.column_dimensions['N'].width = 11
+        ws.column_dimensions['O'].width = 11
+        ws.column_dimensions['P'].width = 11
+        ws.column_dimensions['Q'].width = 11
+        ws.column_dimensions['R'].width = 7
+
+        ws.merge_cells('B2:Q2')
+        ws['B2'].font = Font(name='Aptos Narrow', size=12, bold=True, color='2F75B5')
+        ws['B2'].alignment = Alignment(horizontal="left", vertical="center", wrap_text=True)
+        ws['B2'] = 'DIRESA PASCO - DEIT: SI-03: Niñas y niños menores de 12M de edad del departamento, que cuentan con controles CRED según edad. - ' + nameMonth.upper() + ' ' + request.GET['anio']
+
+        ws.merge_cells('B3:Q3')
+        ws['B3'].font = Font(name='Aptos Narrow', size=9, bold=True, color='305496')
+        ws['B3'] = 'CODIFICACION: Cred: 99381'
+
+        ws.merge_cells('A5:Q5')
+        ws['A5'].font = Font(name='Aptos Narrow', size=9, bold=True, color='757171')
+        ws['A5'] = 'Fuente: BD_HISMINSA con Fecha: ' + date.today().strftime('%Y-%m-%d') + ' a las 08:30 horas'
+
+        ws['A7'] = '#'
+        ws['A7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+        ws['A7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+        ws['A7'].alignment = Alignment(horizontal="center", vertical="center")
+        ws['A7'].fill = PatternFill(start_color='CBD5F5', end_color='CBD5F5', fill_type='solid')
+
+        ws['B7'] = 'Provincia'
+        ws['B7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+        ws['B7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+        ws['B7'].alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+        ws['B7'].fill = PatternFill(start_color='CBD5F5', end_color='CBD5F5', fill_type='solid')
+
+        ws['C7'] = 'Distrito'
+        ws['C7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+        ws['C7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+        ws['C7'].alignment = Alignment(horizontal="center", vertical="center")
+        ws['C7'].fill = PatternFill(start_color='CBD5F5', end_color='CBD5F5', fill_type='solid')
+
+        ws['D7'] = 'Ult. EESS His'
+        ws['D7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+        ws['D7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+        ws['D7'].alignment = Alignment(horizontal="center", vertical="center")
+        ws['D7'].fill = PatternFill(start_color='CBD5F5', end_color='CBD5F5', fill_type='solid')
+
+        ws['E7'] = 'Documento'
+        ws['E7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+        ws['E7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+        ws['E7'].alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+        ws['E7'].fill = PatternFill(start_color='CBD5F5', end_color='CBD5F5', fill_type='solid')
+
+        ws['F7'] = 'Fecha Nacido'
+        ws['F7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+        ws['F7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+        ws['F7'].alignment = Alignment(horizontal="center", vertical="center")
+        ws['F7'].fill = PatternFill(start_color='CBD5F5', end_color='CBD5F5', fill_type='solid')
+
+        ws['G7'] = 'Cred 1'
+        ws['G7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+        ws['G7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+        ws['G7'].alignment = Alignment(horizontal="center", vertical="center")
+        ws['G7'].fill = PatternFill(start_color='CBEFF5', end_color='CBEFF5', fill_type='solid')
+
+        ws['H7'] = 'Cred 2'
+        ws['H7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+        ws['H7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+        ws['H7'].alignment = Alignment(horizontal="center", vertical="center")
+        ws['H7'].fill = PatternFill(start_color='CBEFF5', end_color='CBEFF5', fill_type='solid')
+
+        ws['I7'] = 'Cred 3'
+        ws['I7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+        ws['I7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+        ws['I7'].alignment = Alignment(horizontal="center", vertical="center")
+        ws['I7'].fill = PatternFill(start_color='CBEFF5', end_color='CBEFF5', fill_type='solid')
+
+        ws['J7'] = 'Cred 4'
+        ws['J7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+        ws['J7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+        ws['J7'].alignment = Alignment(horizontal="center", vertical="center")
+        ws['J7'].fill = PatternFill(start_color='CBEFF5', end_color='CBEFF5', fill_type='solid')
+
+        ws['K7'] = 'Cred 5'
+        ws['K7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+        ws['K7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+        ws['K7'].alignment = Alignment(horizontal="center", vertical="center")
+        ws['K7'].fill = PatternFill(start_color='CBEFF5', end_color='CBEFF5', fill_type='solid')
+
+        ws['L7'] = 'Cred 6'
+        ws['L7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+        ws['L7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+        ws['L7'].alignment = Alignment(horizontal="center", vertical="center")
+        ws['L7'].fill = PatternFill(start_color='CBEFF5', end_color='CBEFF5', fill_type='solid')
+
+        ws['M7'] = 'Cred 7'
+        ws['M7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+        ws['M7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+        ws['M7'].alignment = Alignment(horizontal="center", vertical="center")
+        ws['M7'].fill = PatternFill(start_color='CBEFF5', end_color='CBEFF5', fill_type='solid')
+
+        ws['N7'] = 'Cred 8'
+        ws['N7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+        ws['N7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+        ws['N7'].alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+        ws['N7'].fill = PatternFill(start_color='CBEFF5', end_color='CBEFF5', fill_type='solid')
+
+        ws['O7'] = 'Cred 9'
+        ws['O7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+        ws['O7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+        ws['O7'].alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+        ws['O7'].fill = PatternFill(start_color='CBEFF5', end_color='CBEFF5', fill_type='solid')
+
+        ws['P7'] = 'Cred 10'
+        ws['P7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+        ws['P7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+        ws['P7'].alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+        ws['P7'].fill = PatternFill(start_color='CBEFF5', end_color='CBEFF5', fill_type='solid')
+
+        ws['Q7'] = 'Cred 11'
+        ws['Q7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+        ws['Q7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+        ws['Q7'].alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+        ws['Q7'].fill = PatternFill(start_color='CBEFF5', end_color='CBEFF5', fill_type='solid')
+
+        ws['R7'] = 'Cumple'
+        ws['R7'].border = Border(left=Side(border_style="thin", color="808080"), right=Side(border_style="thin", color="808080"), top=Side(border_style="thin", color="808080"), bottom=Side(border_style="thin", color="808080"))
+        ws['R7'].font = Font(name='Aptos Narrow', size=10, bold=True)
+        ws['R7'].alignment = Alignment(horizontal="center", vertical="center", wrap_text=True)
+        ws['R7'].fill = PatternFill(start_color='b3f5c2', end_color='b3f5c2', fill_type='solid')
+
+        if request.GET['prov'] == 'TODOS':
+            dataNom = si_03.objects.filter(anio=request.GET['anio'], mes=request.GET['mes']).order_by('provincia')
+        elif request.GET['prov'] != 'TODOS' and request.GET['dist'] == 'TODOS':
+            dataNom = si_03.objects.filter(anio=request.GET['anio'], mes=request.GET['mes'], cod_prov=request.GET['prov']).order_by('provincia')
+        elif request.GET['prov'] != 'TODOS' and request.GET['dist'] != 'TODOS':
+            dataNom = si_03.objects.filter(anio=request.GET['anio'], mes=request.GET['mes'], cod_dist=request.GET['dist']).order_by('provincia')
+        dataNom = json.loads(serializers.serialize('json', dataNom, indent=2, use_natural_foreign_keys=True))
+
+        cont = 8
+        cant = len(dataNom)
+        num=1
+        if cant > 0:
+            for crd in dataNom:
+                ws.cell(row=cont, column=1).value = num
+                ws.cell(row=cont, column=1).alignment = Alignment(horizontal="center")
+                ws.cell(row=cont, column=2).value = crd['fields']['provincia']
+                ws.cell(row=cont, column=3).value = crd['fields']['distrito']
+                ws.cell(row=cont, column=4).value = crd['fields']['ult_eess']
+                ws.cell(row=cont, column=4).alignment = Alignment(wrap_text=True)
+                ws.cell(row=cont, column=5).value = crd['fields']['documento']
+                ws.cell(row=cont, column=5).alignment = Alignment(horizontal="center")
+                ws.cell(row=cont, column=6).value = crd['fields']['fec_nac']
+                ws.cell(row=cont, column=6).alignment = Alignment(horizontal="center")
+                ws.cell(row=cont, column=7).value = crd['fields']['cred1']
+                ws.cell(row=cont, column=7).alignment = Alignment(horizontal="center")
+                ws.cell(row=cont, column=8).value = crd['fields']['cred2']
+                ws.cell(row=cont, column=8).alignment = Alignment(horizontal="center")
+                ws.cell(row=cont, column=9).value = crd['fields']['cred3']
+                ws.cell(row=cont, column=9).alignment = Alignment(horizontal="center")
+                ws.cell(row=cont, column=10).value = crd['fields']['cred4']
+                ws.cell(row=cont, column=10).alignment = Alignment(horizontal="center")
+                ws.cell(row=cont, column=11).value = crd['fields']['cred5']
+                ws.cell(row=cont, column=11).alignment = Alignment(horizontal="center")
+                ws.cell(row=cont, column=12).value = crd['fields']['cred6']
+                ws.cell(row=cont, column=12).alignment = Alignment(horizontal="center")
+                ws.cell(row=cont, column=13).value = crd['fields']['cred7']
+                ws.cell(row=cont, column=13).alignment = Alignment(horizontal="center")
+                ws.cell(row=cont, column=14).value = crd['fields']['cred8']
+                ws.cell(row=cont, column=14).alignment = Alignment(horizontal="center")
+                ws.cell(row=cont, column=15).value = crd['fields']['cred9']
+                ws.cell(row=cont, column=15).alignment = Alignment(horizontal="center")
+                ws.cell(row=cont, column=16).value = crd['fields']['cred10']
+                ws.cell(row=cont, column=16).alignment = Alignment(horizontal="center")
+                ws.cell(row=cont, column=17).value = crd['fields']['cred11']
+                ws.cell(row=cont, column=17).alignment = Alignment(horizontal="center")
+                ws.cell(row=cont, column=18).alignment = Alignment(horizontal="center")
+                if crd['fields']['num'] == 1:
+                    cumplen = '✔'
+                    ws.cell(row=cont, column=18).font = Font(name='Calibri', size=10, color='00AC4E')
+                else:
+                    cumplen = '✘'
+                    ws.cell(row=cont, column=18).font = Font(name='Calibri', size=10, color='C00000')
+
+                ws.cell(row=cont, column=18).value = cumplen
+
+                cont = cont+1
+                num = num+1
+
+        nombre_archivo = "DEIT_PASCO CONTROLES CRED.xlsx"
+        response = HttpResponse(content_type="application/ms-excel")
+        contenido = "attachment; filename={0}".format(nombre_archivo)
+        response["Content-Disposition"] = contenido
+        ws.title = 'NOMINAL CRED'
         wb.save(response)
         return response
 

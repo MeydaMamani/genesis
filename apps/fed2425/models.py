@@ -401,3 +401,35 @@ class si_0201_cont(models.Model):
 
     def __str__(self):
         return '%s %s, %s' % (self.provincia, self.distrito)
+
+
+class si_03(models.Model):
+    anio = models.IntegerField(blank=True, null=True)
+    mes = models.IntegerField(blank=True, null=True)
+    cod_dep = models.CharField(max_length=10, blank=True, null=True)
+    departamento = models.CharField(max_length=70, blank=True, null=True)
+    cod_prov = models.CharField(max_length=10, blank=True, null=True)
+    provincia = models.CharField(max_length=100, blank=True, null=True)
+    cod_dist = models.CharField(max_length=10, blank=True, null=True)
+    distrito = models.CharField(max_length=150, blank=True, null=True)
+    ult_eess = models.CharField(max_length=250, blank=True, null=True)
+    documento = models.CharField(max_length=15, blank=True, null=True)
+    fec_nac = models.DateField(blank=True, null=True)
+    seguro = models.CharField(max_length=30, blank=True, null=True)
+    edias = models.IntegerField(blank=True, null=True)
+    emes = models.IntegerField(blank=True, null=True)
+    cred1 = models.DateField(blank=True, null=True)
+    cred2 = models.DateField(blank=True, null=True)
+    cred3 = models.DateField(blank=True, null=True)
+    cred4 = models.DateField(blank=True, null=True)
+    cred5 = models.DateField(blank=True, null=True)
+    cred6 = models.DateField(blank=True, null=True)
+    cred7 = models.DateField(blank=True, null=True)
+    cred8 = models.DateField(blank=True, null=True)
+    cred9 = models.DateField(blank=True, null=True)
+    cred10 = models.DateField(blank=True, null=True)
+    cred11 = models.DateField(blank=True, null=True)
+    programa = models.CharField(max_length=150, blank=True, null=True)
+    den = models.IntegerField(blank=True, null=True)
+    num = models.IntegerField(blank=True, null=True)
+
