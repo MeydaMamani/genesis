@@ -1,0 +1,342 @@
+{% extends "base.html" %}
+{% load static  %}
+
+{% block title %}
+	TABLERO PROGRAMAS
+{% endblock title %}
+
+{% block styles %}
+<style>
+    .chart{
+        width: 55px !important;
+        height: 55px !important;
+    }
+</style>
+{% endblock styles %}
+
+{% block content %}
+
+<div id="">
+    <div class="col-md-12 text-center mb-2">
+        <h3 class="font-weight-bold text-white" style="font-style: italic;">Tablero Programas</h3>
+    </div>
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="card">
+                <div class="card-body py-3">
+                    <label class="text-start font-13 mb-1"><b>Seleccione un Programa: </b></label>
+                    <select class="form-select w-100" name="sector" id="sector">
+                        <option value="JUNTOS">JUNTOS</option>
+                        <option value="CUNA SAF">CUNA SAF</option>
+                        <option value="CUNA SCD">CUNA SCD</option>
+                        <option value="COMPROMISO1">COMPROMISO1</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 col-6">
+            <div class="card">
+                <div class="card-header pb-2 pt-3 text-center">
+                    <div class="icon icon-shape bg-gradient-warning shadow text-center border-radius-lg">
+                        <i class="fa fa-heartbeat opacity-10"></i>
+                    </div>
+                </div>
+                <div class="card-body pt-0 p-2 text-center">
+                    <h6 class="text-center mb-0">Anemia</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-2 col-6">
+            <div class="card">
+                <div class="card-header pb-2 pt-3 text-center">
+                    <div class="icon icon-shape bg-gradient-info shadow text-center border-radius-lg">
+                        <i class="fa fa-exclamation-triangle opacity-10"></i>
+                    </div>
+                </div>
+                <div class="card-body pt-0 p-2 text-center">
+                    <h6 class="text-center mb-0">Pendientes</h6>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="card">
+                <div class="card-body px-2 py-3 pb-0">
+                    <div class="col-md-3">
+                        <a href="https://drive.google.com/uc?id=1--HGb3kFfSZgwHbGKPSPDQwJUelbjlfD&export=download" class="btn btn-sm w-100 btn-outline-dark py-2 px-3"><span class="fa fa-download font-18"></span> Cuna SAF</a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="https://drive.google.com/uc?id=1-AhjbWM2P2m4dullKl-wgwNMObx9P3lZ&export=download" class="btn btn-sm w-100 btn-outline-dark py-2 px-3"><span class="fa fa-download font-18"></span> Cuna SCD</a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="https://drive.google.com/uc?id=1-7gseihMEYULDTF19ynynVwYTakoth0d&export=download" class="btn btn-sm w-100 btn-outline-dark py-3 px-2"><span class="fa fa-download font-18"></span> Juntos</a>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="https://drive.google.com/uc?id=1-AZFZlXgrmSirZI0CkgvfaV357zksmq3&export=download" class="btn btn-sm w-100 btn-outline-dark py-2 px-2"><span class="fa fa-download font-18"></span> Compro. 1</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-md-6 mt-2 mb-3">
+            <div class="card">
+                <div class="card-header card-header-text">
+                    <div class="card-text bg-gradient-info px-4 shadow">
+                        <h4 class="card-title text-white font-weight-light">Niño</h4>
+                    </div>
+                </div>
+                <div class="card-body px-0 pt-0">
+                    <div class="d-flex">
+                        <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
+                            <div class="card border shadow">
+                                <div class="card-body p-3">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <div class="numbers">
+                                                <p class="text-sm mb-0 text-capitalize font-weight-bold">Total</p>
+                                                <h5 class="font-weight-bolder mb-0">1795</h5>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 text-end">
+                                            <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
+                                                <i class="ni ni-single-02 text-lg opacity-10" aria-hidden="true"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
+                            <div class="card border shadow">
+                                <div class="card-body p-3">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <div class="numbers">
+                                                <p class="text-sm mb-0 text-capitalize text-success font-weight-bold">Cumplen</p>
+                                                <h5 class="font-weight-bolder mb-0">451</h5>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 text-end">
+                                            <div class="icon icon-shape bg-gradient-success shadow text-center border-radius-md">
+                                                <i class="ni ni-like-2 text-lg opacity-10" aria-hidden="true"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
+                            <div class="card border shadow">
+                                <div class="card-body d-flex p-1">
+                                    <div class="col-md-7 pl-2">
+                                        <span class="chart" data-percent="25"></span>
+                                    </div>
+                                    <div class="col-md-5 d-flex justify-content-center align-items-center">
+                                        <b style="color: #3A73B0;">25.1%</b>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><br>
+                    <div class="col-md-12 text-center">
+                        <button class="btn btn-xs btn-outline-danger">Daniel Carrion</button>
+                        <button class="btn btn-xs btn-outline-success">Oxapampa</button>
+                        <button class="btn btn-xs btn-warning">Pasco</button>
+                    </div>
+                    <div class="p-3 pb-3">
+                        <!-- <canvas id="mybarChart3"></canvas> -->
+                        <div style="height: 350px;" class="mybarKids"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 mt-2">
+            <div class="card">
+                <div class="card-header card-header-text">
+                    <div class="card-text bg-gradient-rose px-4 shadow">
+                        <h4 class="card-title text-white font-weight-light">Gestante</h4>
+                    </div>
+                </div>
+                <div class="card-body px-0 pt-0">
+                    <div class="d-flex">
+                        <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
+                            <div class="card border shadow">
+                                <div class="card-body p-3">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <div class="numbers">
+                                                <p class="text-sm mb-0 text-capitalize font-weight-bold">Total</p>
+                                                <h5 class="font-weight-bolder mb-0">238</h5>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 text-end">
+                                            <div class="icon icon-shape bg-gradient-secondary shadow text-center border-radius-md">
+                                                <i class="ni ni-single-02 text-lg opacity-10" aria-hidden="true"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
+                            <div class="card border shadow">
+                                <div class="card-body p-3">
+                                    <div class="row">
+                                        <div class="col-8">
+                                            <div class="numbers">
+                                                <p class="text-sm mb-0 text-capitalize text-success font-weight-bold">Cumplen</p>
+                                                <h5 class="font-weight-bolder mb-0">200</h5>
+                                            </div>
+                                        </div>
+                                        <div class="col-4 text-end">
+                                            <div class="icon icon-shape bg-gradient-info shadow text-center border-radius-md">
+                                                <i class="ni ni-like-2 text-lg opacity-10" aria-hidden="true"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
+                            <div class="card border shadow">
+                                <div class="card-body d-flex p-1">
+                                    <div class="col-md-7 pl-2">
+                                        <span class="chart" data-percent="84"></span>
+                                    </div>
+                                    <div class="col-md-5 d-flex justify-content-center align-items-center">
+                                        <b style="color: #3A73B0;">84%</b>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div><br>
+                    <div class="col-md-12 text-center">
+                        <button class="btn btn-xs btn-outline-danger">Daniel Carrion</button>
+                        <button class="btn btn-xs btn-outline-success">Oxapampa</button>
+                        <button class="btn btn-xs btn-warning">Pasco</button>
+                    </div>
+                    <div class="p-3 pb-0">
+                        <div style="height: 350px;" class="mybargest"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block scripts %}
+
+<script>
+    (function( $ ){
+        $('.chart').easyPieChart({
+            size: 60,
+            scaleLength: 0,
+            lineWidth: 7,
+            lineCap: "circle",
+            barColor: "#3A73B0",
+        });
+    })( jQuery );
+
+    var options = {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+            datalabels: {
+                formatter: (value, ctx) => {
+                    let percentage = value + "%";
+                    return percentage;
+                },
+                color: 'black',
+                anchor: 'end',
+                align: 'top',
+                offset: 1,
+                font: {
+                    weight: 'bold',
+                    size: 10
+                }
+            }
+        },
+        scales: {
+            y: {
+                beginAtZero: true,
+                max: 100,
+            }
+        },
+    }
+
+    var datKids = {
+        label: 'Niño',
+        data: [57.9, 57.1, 45.5, 40.9, 37.3, 35.7, 31.9, 31.8, 21.2, 14.3, 14.3, 14.3, 12.5],
+        backgroundColor: [
+            '#f236752b',
+            '#c7f7f791',
+            '#4bc0c033',
+            '#9966ff33',
+            '#1940402e',
+            '#4bc0c033',
+            '#dbcaf491',
+            '#f236752b',
+            '#ffb22b47',
+            '#4bc0c033',
+            '#9966ff33',
+            '#0d6efd47',
+        ],
+        fill: false,
+        tension: 0.1
+    };
+
+    var datGest = {
+        label: 'Gestante',
+        data: [100, 100, 90.9, 88.9, 87.5, 81.8, 80, 50, 50, 50, 50, 0],
+        backgroundColor: [
+        	'#ecd6c0b3',
+            '#f236752b',
+            '#ffd2a382',
+            '#c7f7f791',
+            '#b0d6ffbd',
+            '#9966ff33',
+            '#4bc0c033',
+            '#1940402e',
+            '#4bc0c033',
+            '#dbcaf491',
+            '#f236752b',
+            '#ed7e1161',
+            '#4bc0c033',
+            '#9966ff33',
+            '#ffb22b47',
+            '#0d6efd47',
+        ],
+        fill: false,
+        tension: 0.1
+    };
+
+    $('#myChartRedSpr1Neumo').remove();
+    $('.mybarKids').append("<canvas id='myChartRedSpr1Neumo'></canvas>");
+    var ctx_province = document.getElementById("myChartRedSpr1Neumo").getContext("2d");
+    var myChartProvince = new Chart(ctx_province, {
+        type: 'bar',
+        data: {
+            labels: ["HUACHON", "NINACACA", "PALLANCHACRA", "TICLACAYAN", "PAUCARTAMBO", "SIMON BOLIVAR", "HUARIACA", "YARUSYACAN", "HUAYLLAY", "VICCO","YANACANCHA","TINYAHUARCO","CHAUPIMARCA"],
+            datasets: [datKids, ]
+        },
+        plugins: [ChartDataLabels],
+        options: options
+    });
+
+    $('#myChartGest').remove();
+    $('.mybargest').append("<canvas id='myChartGest'></canvas>");
+    var ctx_province = document.getElementById("myChartGest").getContext("2d");
+    var myChartProvince = new Chart(ctx_province, {
+        type: 'bar',
+        data: {
+            labels: ["YARUSYACAN", "PALLANCHACRA", "NINACACA","PAUCARTAMBO","HUARIACA","CHAUPIMARCA","HUACHON","SIMON BOLIVAR","HUAYLLAY","YANACANCHA","TICLACAYAN","VICCO"],
+            datasets: [datGest, ]
+        },
+        plugins: [ChartDataLabels],
+        options: options
+    });
+</script>
+
+{% endblock scripts %}
