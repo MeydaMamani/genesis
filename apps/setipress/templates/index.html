@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% load static  %}
+
+{% block title %}
+	SETI IPRESS
+{% endblock title %}
+
+{% block styles %}
+
+{% endblock styles %}
+
+{% block content %}
+
+<div id="appSetipress">
+    <div class="row">
+        <div class="col-lg-6 offset-md-3 col-sm-8"><br><br>
+            <div class="card notes2 shadow" style="background: #f5f7c7;">
+                <div class="card-body">
+                    <h3 class="mt-4 mb-2 text-center" style="color: #f59036;">SETI IPRESS</h3>
+                    <form method="GET" @submit.prevent="PrintExcel">
+                        <div class="mb-2 col-md-6 select2-sm">
+                            <label class="text-start font-13 mb-1"><b>Seleccione una Provincia: </b></label>
+                            <select class="form-control-sm w-100" name="provincia" id="provincia" @change="listDistritos">
+                                <option value="0">---</option>
+                                {% for prov in provincia %}
+                                    <option value="{{ prov.codigo }}">{{ prov.nombre }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="mb-2 col-md-6 select2-sm">
+                            <label class="text-start font-13 mb-1"><b>Seleccione un Distrito: </b></label>
+                            <select class="form-control-sm w-100" name="distrito" id="distrito" @change="listEstab" v-select2="''">
+                                <option value="0">---</option>
+                                <option v-for="item in listDistricts" :value="item.pk">[[ item.fields.nombre ]]</option>
+                            </select>
+                        </div>
+                        <div class="mb-2 col-md-6 select2-sm">
+                            <label class="text-start font-13 mb-1"><b>Seleccione un EESS: </b></label>
+                            <select class="form-control-sm w-100" name="establecimiento" id="establecimiento" v-select2="''">
+                                <option v-for="item in listEess" :value="item.pk">[[ item.fields.nombre ]]</option>
+                                <option value="TODOS" selected>TODOS</option>
+                            </select>
+                        </div>
+                        <div class="mb-2 col-md-6 select2-sm">
+                            <label class="text-start font-13 mb-1"><b>Seleccione Año: </b></label>
+                            <select class="form-control-sm w-100" name="anio" id="anio" v-model="anio" v-select2="''"></select>
+                        </div>
+                        <div class="mb-2 col-md-6 select2-sm">
+                            <label class="text-start font-13 mb-1"><b>Seleccione Mes: </b></label>
+                            <select class="form-control-sm w-100" name="mes" id="mes" v-model="mes" v-select2="''"></select>
+                        </div>
+                        <div class="mb-2 col-md-6 select2-sm">
+                            <label class="text-start font-13 mb-1"><b>Seleccione Tipo: </b></label>
+                            <select class="form-control-sm w-100" name="tipo" id="tipo" v-select2="''">
+                                <option value="tb1">Trama B1</option>
+                                <option value="tb2">Trama B2</option>
+                            </select>
+                        </div>
+                        <div class="col-md-12 mt-3">
+                            <button class="btn btn-outline-danger btn-block w-100 mb-0" type="submit"><i class="fa fa-print"></i> Descargar</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}
+
+{% block scripts %}
+
+<script src="{% static 'js/vue/setipress.js' %}"></script>
+<!-- <script src="{% static 'js/js/setipress.js' %}"></script> -->
+
+{% endblock scripts %}
