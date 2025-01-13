@@ -25,4 +25,5 @@ urlpatterns = [
     path('person/',include('apps.person.urls', namespace='person')),
     path('promsa/',include('apps.promsa.urls', namespace='promsa')),
     path('boards/',include('apps.boards.urls', namespace='boards')),
+    path('setipress/',include('apps.setipress.urls', namespace='setipress')),
 ]

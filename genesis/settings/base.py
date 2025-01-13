@@ -25,6 +25,7 @@ LOCAL_APPS = [
     'apps.followup',
     'apps.promsa',
     'apps.boards',
+    'apps.setipress',
 ]
 
 INSTALLED_APPS = DJANGO_APPS + LOCAL_APPS
@@ -85,7 +86,7 @@ USE_I18N = True
 
 USE_L10N = True
 
-USE_TZ = True
+USE_TZ = False
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE=True
 SESSION_COOKIE_AGE = 7200 # set just 10 seconds to test
