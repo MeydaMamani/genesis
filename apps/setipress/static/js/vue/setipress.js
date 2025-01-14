@@ -38,11 +38,34 @@ new Vue({
         },
 
         PrintExcel() {
+            let prov = $("#provincia").val();
             let dist = $("#distrito").val();
             let eess = $("#establecimiento").val();
             let tipo = $("#tipo").val();
-            url_ = window.location.origin + window.location.pathname + 'print/?dist='+dist+'&anio='+this.anio+'&mes='+this.mes+'&eess='+eess+'&tipo='+tipo;
-            window.open(url_, '_parent');
+            if(prov == 0){
+                $.toast({
+                    heading: '¡Seleccione Provincia!',
+                    position: 'top-right',
+                    loaderBg:'#ff6849',
+                    icon: 'error',
+                    hideAfter: 3000,
+                    stack: 6
+                });
+            }
+            else if(dist == 0){
+                $.toast({
+                    heading: '¡Seleccione Distrito!',
+                    position: 'top-right',
+                    loaderBg:'#ff6849',
+                    icon: 'error',
+                    hideAfter: 3000,
+                    stack: 6
+                });
+            }
+            else{
+                url_ = window.location.origin + window.location.pathname + 'print/?dist='+dist+'&anio='+this.anio+'&mes='+this.mes+'&eess='+eess+'&tipo='+tipo;
+                window.open(url_, '_parent');
+            }
         },
     },
 })
