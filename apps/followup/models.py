@@ -201,7 +201,7 @@ class cnv(models.Model):
     cod_eess = models.CharField(max_length=15, blank=True, null=True)
     eess = models.CharField(max_length=200, blank=True, null=True)
     cnv = models.CharField(max_length=20, blank=True, null=True)
-    institucion = models.CharField(max_length=35, blank=True, null=True)
+    institucion = models.CharField(max_length=50, blank=True, null=True)
     categoria = models.CharField(max_length=15, blank=True, null=True)
     periodo = models.CharField(max_length=6, blank=True, null=True)
     fec_nac = models.DateField(blank=True, null=True)
