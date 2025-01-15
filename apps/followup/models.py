@@ -211,7 +211,7 @@ class cnv(models.Model):
     dur_emb = models.IntegerField(blank=True, null=True)
     cond_parto = models.CharField(max_length=15, blank=True, null=True)
     sexo = models.CharField(max_length=10, blank=True, null=True)
-    tparto = models.CharField(max_length=10, blank=True, null=True)
+    tparto = models.CharField(max_length=30, blank=True, null=True)
     financiador = models.CharField(max_length=20, blank=True, null=True)
     prof_cert = models.CharField(max_length=30, blank=True, null=True)
     cert_prof = models.CharField(max_length=30, blank=True, null=True)
