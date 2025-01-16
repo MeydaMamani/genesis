@@ -95,7 +95,7 @@
                 <div class="card-body p-3 pt-2 pb-2">
                     <form method="POST" @submit.prevent="sendFormat">
                         {% csrf_token %}
-                        <div class="mb-2 col-md-6 pl-0">
+                        <div class="mb-2 col-md-6 pl-0 select2-sm">
                             <select class="form-select-sm w-100" name="sector" id="sector" v-model="sector" v-select2="''">
                                 {% for sec in sector %}
                                     <option value="{{ sec.codigo }}">{{ sec.nombre }}</option>
@@ -103,7 +103,7 @@
                                 <option value="TODOS" selected>TODOS</option>
                             </select>
                         </div>
-                        <div class="mb-2 col-md-6 p-0">
+                        <div class="mb-2 col-md-6 p-0 select2-sm">
                             <select class="form-select-sm w-100" name="provincia" id="provincia" @change="listDistritos" v-select2="''">
                                 {% for prov in provincia %}
                                     <option value="{{ prov.codigo }}">{{ prov.nombre }}</option>
@@ -111,18 +111,18 @@
                                 <option value="TODOS" selected>TODOS</option>
                             </select>
                         </div>
-                        <div class="mb-2 col-md-6 pl-0">
+                        <div class="mb-2 col-md-6 pl-0 select2-sm">
                             <select class="form-control-sm w-100" name="distrito" id="distrito" v-select2="''">
                                 <option v-for="item in listDistricts" :value="item.pk">[[ item.fields.nombre ]]</option>
                                 <option value="TODOS" selected>TODOS</option>
                             </select>
                         </div>
-                        <div class="mb-2 col-md-6 p-0">
+                        <div class="mb-2 col-md-6 p-0 select2-sm">
                             <select class="form-control-sm w-100" name="anio" id="anio" v-model="anio" v-select2="''">
                                 <option value="0">- Seleccione Anio -</option>
                             </select>
                         </div>
-                        <div class="mb-2 col-md-6 pl-0">
+                        <div class="mb-2 col-md-6 pl-0 select2-sm">
                             <select class="form-control-sm w-100" name="mes" id="mes" v-model="mes" v-select2="''">
                                 <option value="0">- Seleccione Mes -</option>
                             </select>
@@ -137,7 +137,7 @@
         <div class="col-md-2 mb-3 pl-0">
             <div class="card shadow text-center">
                 <div class="card-body p-0">
-                    <span class="chart" data-percent="30"><span class="percent"></span></span>
+                    <span class="chart" data-percent="0"><span class="percent"></span></span>
                 </div>
             </div>
         </div>
@@ -171,7 +171,7 @@
                                 <th class="align-middle p-1">Documento</th>
                                 <th class="align-middle p-1" style="background: #CBEFF5 !important;">Fecha Dx</th>
                                 <th class="align-middle p-1" style="background: #DCCBF5 !important;">Suple 1</th>
-                                <th class="align-middle p-1" style="background: #abc7fb !important;">Dosaje</th>
+                                <th class="align-middle p-1" style="background: #abc7fb !important;">Dosaje Ctrl</th>
                                 <th class="align-middle p-1" style="background: #F5D4CB !important;">Suple 2</th>
                                 <th class="align-middle p-1" style="background: #B3F5C2 !important">Cumple</th>
                                 <th class="align-middle p-1">Programa</th>
