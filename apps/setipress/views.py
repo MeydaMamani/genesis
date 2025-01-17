@@ -34,15 +34,16 @@ class PrintTxt(View):
             if request.GET['eess'] == 'TODOS':
                 tramab1 = b1.objects.filter(cod_dist=request.GET['dist'], anio=request.GET['anio'], mes=request.GET['mes'])
                 trb0 = b1.objects.filter(cod_dist=request.GET['dist'], anio=request.GET['anio'], mes=request.GET['mes']).first()
-                ipress = trb0.cod_dist2
+                ipress = '' if trb0 is None else trb0.cod_dist2
             else:
                 tramab1 = b1.objects.filter(cod_eess=request.GET['eess'], anio=request.GET['anio'], mes=request.GET['mes'])
                 trb1 = b1.objects.filter(cod_eess=request.GET['eess'], anio=request.GET['anio'], mes=request.GET['mes']).first()
                 ipress = trb1.cod_ipress
 
             contenido = ''
+            ugipress = ''
             for tb1 in tramab1:
-                ugipress = tb1.cod_ugipress
+                ugipress = '' if tb1.cod_ugipress is None else tb1.cod_ugipress
                 contenido += f"{tb1.periodo}|{tb1.cod_ipress}|{tb1.cod_ugipress}|{tb1.sexo}|{tb1.gedad}|{tb1.aten_med}|{tb1.aten_nomed}|{tb1.aten_mes}\n"
 
             contenido = contenido.rstrip('\n')
@@ -54,15 +55,17 @@ class PrintTxt(View):
             if request.GET['eess'] == 'TODOS':
                 tramab2 = b2.objects.filter(cod_dist=request.GET['dist'], anio=request.GET['anio'], mes=request.GET['mes'])
                 trb0 = b2.objects.filter(cod_dist=request.GET['dist'], anio=request.GET['anio'], mes=request.GET['mes']).first()
-                ipress = trb0.cod_dist2
+                ipress = '' if trb0 is None else trb0.cod_dist2
             else:
                 tramab2 = b2.objects.filter(cod_eess=request.GET['eess'], anio=request.GET['anio'], mes=request.GET['mes'])
                 trb2 = b1.objects.filter(cod_eess=request.GET['eess'], anio=request.GET['anio'], mes=request.GET['mes']).first()
                 ipress = trb2.cod_ipress
 
             contenido2 = ''
+            ugipress = ''
             for tb2 in tramab2:
-                ugipress = tb2.cod_ugipress
+                print('HOLAAAAAAAAA', tb2.cod_ugipress)
+                ugipress = '' if tb2.cod_ugipress is None else tb2.cod_ugipress
                 contenido2 += f"{tb2.periodo}|{tb2.cod_ipress}|{tb2.cod_ugipress}|{tb2.sexo}|{tb2.gedad}|{tb2.dx_def}|{tb2.aten}\n"
 
             contenido2 = contenido2.rstrip('\n')
