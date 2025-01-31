@@ -1,7 +1,7 @@
 from django.views.generic import TemplateView, View
 from django.core import serializers
 from django.http import JsonResponse, HttpResponse, QueryDict
-from .models import b1, b2
+from .models import b1, b2, e, f
 from apps.main.models import Sector, Provincia, Distrito, Establecimiento
 
 # library excel
@@ -64,13 +64,54 @@ class PrintTxt(View):
             contenido2 = ''
             ugipress = ''
             for tb2 in tramab2:
-                print('HOLAAAAAAAAA', tb2.cod_ugipress)
                 ugipress = '' if tb2.cod_ugipress is None else tb2.cod_ugipress
                 contenido2 += f"{tb2.periodo}|{tb2.cod_ipress}|{tb2.cod_ugipress}|{tb2.sexo}|{tb2.gedad}|{tb2.dx_def}|{tb2.aten}\n"
 
             contenido2 = contenido2.rstrip('\n')
             nombre_archivo = f"{ugipress}_{ipress}_{request.GET['anio']}_{request.GET['mes']}_TAB2.txt"
             response = HttpResponse(contenido2, content_type='text/plain')
+            response['Content-Disposition'] = f'attachment; filename="{nombre_archivo}"'
+
+        elif request.GET['tipo'] == 'te':
+            if request.GET['eess'] == 'TODOS':
+                tramae = e.objects.filter(cod_dist=request.GET['dist'], anio=request.GET['anio'], mes=request.GET['mes'])
+                trb0 = e.objects.filter(cod_dist=request.GET['dist'], anio=request.GET['anio'], mes=request.GET['mes']).first()
+                ipress = '' if trb0 is None else trb0.cod_dist2
+            else:
+                tramae = e.objects.filter(cod_eess=request.GET['eess'], anio=request.GET['anio'], mes=request.GET['mes'])
+                trb1 = e.objects.filter(cod_eess=request.GET['eess'], anio=request.GET['anio'], mes=request.GET['mes']).first()
+                ipress = trb1.cod_ipress
+
+            contenido = ''
+            ugipress = ''
+            for tb1 in tramae:
+                ugipress = '' if tb1.cod_ugipress is None else tb1.cod_ugipress
+                contenido += f"{tb1.periodo}|{tb1.cod_ipress}|{tb1.cod_ugipress}|{tb1.tparto}|{tb1.complicacion}|{tb1.partos}|{tb1.t_nac}|{tb1.vivos}|{tb1.muertos}\n"
+
+            contenido = contenido.rstrip('\n')
+            nombre_archivo = f"{ugipress}_{ipress}_{request.GET['anio']}_{request.GET['mes']}_TABE.txt"
+            response = HttpResponse(contenido, content_type='text/plain')
+            response['Content-Disposition'] = f'attachment; filename="{nombre_archivo}"'
+
+        elif request.GET['tipo'] == 'tf':
+            if request.GET['eess'] == 'TODOS':
+                tramaf = f.objects.filter(cod_dist=request.GET['dist'], anio=request.GET['anio'], mes=request.GET['mes'])
+                trb0 = f.objects.filter(cod_dist=request.GET['dist'], anio=request.GET['anio'], mes=request.GET['mes']).first()
+                ipress = '' if trb0 is None else trb0.cod_dist2
+            else:
+                tramaf = f.objects.filter(cod_eess=request.GET['eess'], anio=request.GET['anio'], mes=request.GET['mes'])
+                trb1 = f.objects.filter(cod_eess=request.GET['eess'], anio=request.GET['anio'], mes=request.GET['mes']).first()
+                ipress = trb1.cod_ipress
+
+            contenido = ''
+            ugipress = ''
+            for tb1 in tramaf:
+                ugipress = '' if tb1.cod_ugipress is None else tb1.cod_ugipress
+                contenido += f"{tb1.periodo}|{tb1.cod_ipress}|{tb1.cod_ugipress}|{tb1.genero}|{tb1.gedad}|{tb1.eventos}|{tb1.total}\n"
+
+            contenido = contenido.rstrip('\n')
+            nombre_archivo = f"{ugipress}_{ipress}_{request.GET['anio']}_{request.GET['mes']}_TAF.txt"
+            response = HttpResponse(contenido, content_type='text/plain')
             response['Content-Disposition'] = f'attachment; filename="{nombre_archivo}"'
 
         return response
